@@ -12,6 +12,7 @@ class Navigation extends Component {
             <Nav className="mr-auto">
                 <Nav.Link> <NavLink className="nav-link" to="/" >Inicio</NavLink> </Nav.Link>
                 <Nav.Link> <NavLink className="nav-link" to="/ventas">Ventas</NavLink></Nav.Link>
+                <Nav.Link> <NavLink className="nav-link" to="/inventario">Inventario</NavLink></Nav.Link>
                
             </Nav>
         </Navbar>

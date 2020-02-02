@@ -4,7 +4,7 @@ class Autos extends Component {
     render(){
         return(
             <div>
-                <h1>Inventario Ade Autos</h1>
+                <h1>Inventario de Autos</h1>
             </div>
         );
     }
