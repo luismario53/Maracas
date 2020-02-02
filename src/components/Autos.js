@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Card, Col, Row, Container, Table } from 'react-bootstrap';
+import { Form, Button, Col, Row, Table } from 'react-bootstrap';
 
 class Autos extends Component {
     render() {
