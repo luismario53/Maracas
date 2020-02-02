@@ -1,14 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Header from './components/Header';
+import React, { Component } from "react";
+import Navigation from './Navigation';
 
-function App() {
-  return (
-    <div className="App">
-      <Header />
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Navigation />
+    );
+  }
 }
 
 export default App;
