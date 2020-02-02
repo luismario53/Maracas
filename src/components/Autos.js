@@ -5,7 +5,7 @@ class Autos extends Component {
     render() {
         return (
             <div>
-                <Row className="mt-5 col-12 ml-1">
+                <Row className="mt-4 col-12 ml-1">
                     <Col xs={12} md={4}>
                         <Form>
                             <Form.Group>
