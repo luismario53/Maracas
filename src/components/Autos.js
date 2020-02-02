@@ -20,6 +20,39 @@ class Autos extends Component {
                             <Form.Group>
                                 <Form.Control type="number" placeholder="Cilindros"></Form.Control>
                             </Form.Group>
+                            <Form.Group>
+                                <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                            </Form.Group>
+                            <Form.Row>
+                                <Form.Group as={Col}>
+                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                </Form.Group>
+                            </Form.Row>
+                            <Form.Row>
+                                <Form.Group as={Col}>
+                                    <Form.Control type="number" placeholder="Precio de compra"></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Form.Control type="number" placeholder="Gasolina usada"></Form.Control>
+                                </Form.Group>
+                            </Form.Row>
+                            <Form.Group>
+                                <Form.Control type="number" placeholder="Precio exportada y modulada"></Form.Control>
+                            </Form.Group>
+                            <Form.Row>
+                                <Form.Group as={Col} className="mt-2">
+                                <Button variant="warning">Limpiar Campos</Button>
+                                </Form.Group>
+                                <Form.Group as={Col} className="mt-2">
+                                    <Button variant="success">Registrar Auto</Button>
+                                </Form.Group>
+                            </Form.Row>
                         </Form>
                     </Col>
                     <Col xs={6} md={8} className="col-8">
@@ -37,6 +70,63 @@ class Autos extends Component {
                                     <th>Precio Exp Mod</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Toyota</td>
+                                    <td>Camry</td>
+                                    <td>2009</td>
+                                    <td>4</td>
+                                    <td>Phoenix</td>
+                                    <td>18-febrero-2018</td>
+                                    <td>1400</td>
+                                    <td>450</td>
+                                    <td>1000</td>
+                                </tr>
+                                <tr>
+                                    <td>Toyota</td>
+                                    <td>Camry</td>
+                                    <td>2009</td>
+                                    <td>4</td>
+                                    <td>Phoenix</td>
+                                    <td>18-noviembre-2018</td>
+                                    <td>1400</td>
+                                    <td>450</td>
+                                    <td>1000</td>
+                                </tr>
+                                <tr>
+                                    <td>Toyota</td>
+                                    <td>Camry</td>
+                                    <td>2009</td>
+                                    <td>4</td>
+                                    <td>Phoenix</td>
+                                    <td>18-noviembre-2018</td>
+                                    <td>1400</td>
+                                    <td>450</td>
+                                    <td>1000</td>
+                                </tr>
+                                <tr>
+                                    <td>Toyota</td>
+                                    <td>Camry</td>
+                                    <td>2009</td>
+                                    <td>4</td>
+                                    <td>Phoenix</td>
+                                    <td>18-noviembre-2018</td>
+                                    <td>1400</td>
+                                    <td>450</td>
+                                    <td>1000</td>
+                                </tr>
+                                <tr>
+                                    <td>Toyota</td>
+                                    <td>Camry</td>
+                                    <td>2009</td>
+                                    <td>4</td>
+                                    <td>Phoenix</td>
+                                    <td>18-noviembre-2018</td>
+                                    <td>1400</td>
+                                    <td>450</td>
+                                    <td>1000</td>
+                                </tr>
+                            </tbody>
                         </Table>
                     </Col>
                 </Row>
