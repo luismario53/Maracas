@@ -1,0 +1,20 @@
+.estilo{
+    height: 50vh;
+}
+
+.properties-pagar{
+    margin-left: 50vw;
+}
+
+.properties{
+    resize: none;
+}
+
+.properties-autos{
+    overflow-x: hidden;
+    max-height: 50vh;
+}
+
+.properties-button{
+    width: 100%;
+}
