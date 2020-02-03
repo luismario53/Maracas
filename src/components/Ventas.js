@@ -1,9 +1,45 @@
 import React, { Component } from 'react';
 import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button } from 'react-bootstrap';
 import '../assets/css/example.css'
+import * as firebase from 'firebase';
+
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyCbzcGkbOuWa_cMKCdtWWRsICMV-Zh6B2A",
+    authDomain: "marabe-2b660.firebaseapp.com",
+    databaseURL: "https://marabe-2b660.firebaseio.com",
+    projectId: "marabe-2b660",
+    storageBucket: "marabe-2b660.appspot.com",
+    messagingSenderId: "154115401178",
+    appId: "1:154115401178:web:307b5dfa491a8105c14ce3"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 class Ventas extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            autos: []
+        };
+    }
+
+    componentDidMount() {
+        var aux = [];
+        firebase.database().ref('Autos/').on('value', snap => {
+            aux = snap.val();
+            console.log(aux);        
+        });
+    }
+
     render() {
+
+        const { autos } = this.state;
+        const listaAutos = autos.map(auto => {
+            return <ListGroup.Item>{auto.marca_modelo_anho}</ListGroup.Item>
+        });
         return (
             <div>
                 <Row className="mt-4 col-12 ml-1 estilo">
@@ -17,17 +53,6 @@ class Ventas extends Component {
                         <Card>
                             <ListGroup className="properties-autos" variant="flush">
                                 <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
-                                <ListGroup.Item>Ford Chevrolet 2001</ListGroup.Item>
-                                <ListGroup.Item>Mazda Tribute 2006</ListGroup.Item>
-                                <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
-                                <ListGroup.Item>Ford Chevrolet 2001</ListGroup.Item>
-                                <ListGroup.Item>Mazda Tribute 2006</ListGroup.Item>
-                                <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
-                                <ListGroup.Item>Ford Chevrolet 2001</ListGroup.Item>
-                                <ListGroup.Item>Mazda Tribute 2006</ListGroup.Item>
-                                <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
-                                <ListGroup.Item>Ford Chevrolet 2001</ListGroup.Item>
-                                <ListGroup.Item>Mazda Tribute 2006</ListGroup.Item>
                             </ListGroup>
                         </Card>
                     </Col>
