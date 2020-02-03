@@ -21,17 +21,17 @@ class Autos extends Component {
                                 <Form.Control type="number" placeholder="Cilindros"></Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                <Form.Control type="text" placeholder="Lugar de compra"></Form.Control>
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                    <Form.Control type="number" placeholder="Día"></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                    <Form.Control type="text" placeholder="Mes"></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Lugar de compra"></Form.Control>
+                                    <Form.Control type="number" placeholder="Año"></Form.Control>
                                 </Form.Group>
                             </Form.Row>
                             <Form.Row>
@@ -47,7 +47,7 @@ class Autos extends Component {
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-2">
-                                <Button variant="warning">Limpiar Campos</Button>
+                                    <Button variant="warning">Limpiar Campos</Button>
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-2">
                                     <Button variant="success">Registrar Auto</Button>

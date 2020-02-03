@@ -6,7 +6,7 @@ import '../assets/css/Navigation.css';
 class Navigation extends Component {
     render() {
         return (
-            <Navbar style={{overflow: "hidden"}} bg="dark" variant="dark">
+            <Navbar bg="dark" variant="dark">
                 <Navbar.Brand>El Árabe</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link> <NavLink className="nav-link" to="/" >Inicio</NavLink> </Nav.Link>
