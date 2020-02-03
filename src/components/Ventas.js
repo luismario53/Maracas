@@ -3,6 +3,19 @@ import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button
 import '../assets/css/example.css'
 import firebase from 'firebase';
 
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyCbzcGkbOuWa_cMKCdtWWRsICMV-Zh6B2A",
+    authDomain: "marabe-2b660.firebaseapp.com",
+    databaseURL: "https://marabe-2b660.firebaseio.com",
+    projectId: "marabe-2b660",
+    storageBucket: "marabe-2b660.appspot.com",
+    messagingSenderId: "154115401178",
+    appId: "1:154115401178:web:307b5dfa491a8105c14ce3"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
 class Ventas extends Component {
 
     constructor(props) {
@@ -14,10 +27,15 @@ class Ventas extends Component {
     }
 
     componentDidMount() {
-        var aux = [];
+        var { autos } = this.state;
         firebase.database().ref('Autos/').on('value', snap => {
-            aux = snap.val();
-            console.log(aux);        
+            snap.forEach(snapshot => {
+                autos.push({
+                    id: snapshot.key,
+                    auto: snapshot.val()
+                });
+                this.setState({autos})
+            });
         });
     }
 
@@ -25,7 +43,7 @@ class Ventas extends Component {
 
         const { autos } = this.state;
         const listaAutos = autos.map(auto => {
-            return <ListGroup.Item>{auto.marca_modelo_anho}</ListGroup.Item>
+            return <ListGroup.Item key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
         });
         return (
             <div>
@@ -39,7 +57,7 @@ class Ventas extends Component {
                         </InputGroup>
                         <Card>
                             <ListGroup className="properties-autos" variant="flush">
-                                <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
+                                {listaAutos}
                             </ListGroup>
                         </Card>
                     </Col>
