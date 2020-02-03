@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button } from 'react-bootstrap';
 import '../assets/css/example.css'
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -27,10 +27,15 @@ class Ventas extends Component {
     }
 
     componentDidMount() {
-        var aux = [];
+        var { autos } = this.state;
         firebase.database().ref('Autos/').on('value', snap => {
-            aux = snap.val();
-            console.log(aux);        
+            snap.forEach(snapshot => {
+                autos.push({
+                    id: snapshot.key,
+                    auto: snapshot.val()
+                });
+                this.setState({autos})
+            });
         });
     }
 
@@ -38,7 +43,7 @@ class Ventas extends Component {
 
         const { autos } = this.state;
         const listaAutos = autos.map(auto => {
-            return <ListGroup.Item>{auto.marca_modelo_anho}</ListGroup.Item>
+            return <ListGroup.Item key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
         });
         return (
             <div>
@@ -52,7 +57,7 @@ class Ventas extends Component {
                         </InputGroup>
                         <Card>
                             <ListGroup className="properties-autos" variant="flush">
-                                <ListGroup.Item>Ford Focus 2008</ListGroup.Item>
+                                {listaAutos}
                             </ListGroup>
                         </Card>
                     </Col>
