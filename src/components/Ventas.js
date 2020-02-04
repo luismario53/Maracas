@@ -3,24 +3,10 @@ import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button
 import '../assets/css/example.css'
 import firebase from 'firebase';
 
-// Your web app's Firebase configuration
-var firebaseConfig = {
-    apiKey: "AIzaSyCbzcGkbOuWa_cMKCdtWWRsICMV-Zh6B2A",
-    authDomain: "marabe-2b660.firebaseapp.com",
-    databaseURL: "https://marabe-2b660.firebaseio.com",
-    projectId: "marabe-2b660",
-    storageBucket: "marabe-2b660.appspot.com",
-    messagingSenderId: "154115401178",
-    appId: "1:154115401178:web:307b5dfa491a8105c14ce3"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
 class Ventas extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             autos: []
         };
@@ -34,7 +20,7 @@ class Ventas extends Component {
                     id: snapshot.key,
                     auto: snapshot.val()
                 });
-                this.setState({autos})
+                this.setState({ autos })
             });
         });
     }
@@ -168,10 +154,10 @@ class Ventas extends Component {
                                 <Form.Control type="text" placeholder="Nombre de la pieza"></Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="textarea" placeholder="Descripción"></Form.Control>
+                                <Form.Control type="number" placeholder="Cantidad"></Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control className="properties" as="textarea" rows="3" placeholder="Cantidad"></Form.Control>
+                                <Form.Control className="properties" as="textarea" rows="3" placeholder="Descripción"></Form.Control>
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-1">

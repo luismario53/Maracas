@@ -1,8 +1,49 @@
 import React, { Component } from 'react';
 import { Form, Button, Col, Row, Table } from 'react-bootstrap';
+import firebase from 'firebase';
+import '../assets/css/example.css'
 
 class Autos extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            autos: []
+        };
+    }
+
+    componentDidMount() {
+        var { autos } = this.state;
+        firebase.database().ref('Autos/').on('value', snap => {
+            snap.forEach(snapshot => {
+                autos.push({
+                    id: snapshot.key,
+                    auto: snapshot.val()
+                });
+                this.setState({ autos })
+            });
+        });
+    }
+
     render() {
+
+        const { autos } = this.state;
+        const listaAutos = autos.map(auto => {
+            return (
+                <tr key={auto.id}>
+                    <td>{auto.auto.marca}</td>
+                    <td>{auto.auto.modelo}</td>
+                    <td>{auto.auto.anho}</td>
+                    <td>{auto.auto.cilindros}</td>
+                    <td>{auto.auto.lugarCompra}</td>
+                    <td>{auto.auto.fechaCompra}</td>
+                    <td>{auto.auto.precioAuto}</td>
+                    <td>{auto.auto.gas}</td>
+                    <td>{auto.auto.info}</td>
+                </tr>
+            );
+        });
+
         return (
             <div>
                 <Row className="mt-4 col-12 ml-1">
@@ -55,7 +96,7 @@ class Autos extends Component {
                             </Form.Row>
                         </Form>
                     </Col>
-                    <Col xs={6} md={8} className="col-8">
+                    <Col xs={6} md={8} className="col-8 properties-tabla-autos">
                         <Table responsive striped bordered hover size="sm">
                             <thead>
                                 <tr>
@@ -71,61 +112,7 @@ class Autos extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Toyota</td>
-                                    <td>Camry</td>
-                                    <td>2009</td>
-                                    <td>4</td>
-                                    <td>Phoenix</td>
-                                    <td>18-febrero-2018</td>
-                                    <td>1400</td>
-                                    <td>450</td>
-                                    <td>1000</td>
-                                </tr>
-                                <tr>
-                                    <td>Toyota</td>
-                                    <td>Camry</td>
-                                    <td>2009</td>
-                                    <td>4</td>
-                                    <td>Phoenix</td>
-                                    <td>18-noviembre-2018</td>
-                                    <td>1400</td>
-                                    <td>450</td>
-                                    <td>1000</td>
-                                </tr>
-                                <tr>
-                                    <td>Toyota</td>
-                                    <td>Camry</td>
-                                    <td>2009</td>
-                                    <td>4</td>
-                                    <td>Phoenix</td>
-                                    <td>18-noviembre-2018</td>
-                                    <td>1400</td>
-                                    <td>450</td>
-                                    <td>1000</td>
-                                </tr>
-                                <tr>
-                                    <td>Toyota</td>
-                                    <td>Camry</td>
-                                    <td>2009</td>
-                                    <td>4</td>
-                                    <td>Phoenix</td>
-                                    <td>18-noviembre-2018</td>
-                                    <td>1400</td>
-                                    <td>450</td>
-                                    <td>1000</td>
-                                </tr>
-                                <tr>
-                                    <td>Toyota</td>
-                                    <td>Camry</td>
-                                    <td>2009</td>
-                                    <td>4</td>
-                                    <td>Phoenix</td>
-                                    <td>18-noviembre-2018</td>
-                                    <td>1400</td>
-                                    <td>450</td>
-                                    <td>1000</td>
-                                </tr>
+                                {listaAutos}
                             </tbody>
                         </Table>
                     </Col>
