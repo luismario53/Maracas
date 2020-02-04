@@ -3,12 +3,10 @@ import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button
 import '../assets/css/example.css'
 import firebase from 'firebase';
 
-
 class Ventas extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             autos: []
         };
@@ -22,7 +20,7 @@ class Ventas extends Component {
                     id: snapshot.key,
                     auto: snapshot.val()
                 });
-                this.setState({autos})
+                this.setState({ autos })
             });
         });
     }
@@ -159,7 +157,7 @@ class Ventas extends Component {
                                 <Form.Control type="number" placeholder="Cantidad"></Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control className="properties" as="textarea" rows="3" placeholder="Descripcion"></Form.Control>
+                                <Form.Control className="properties" as="textarea" rows="3" placeholder="Descripción"></Form.Control>
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-1">
