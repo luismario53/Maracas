@@ -1,9 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Form, Button, Col, Row, Table } from 'react-bootstrap';
 import firebase from 'firebase';
 import '../assets/css/example.css'
 import SimpleReactValidator from 'simple-react-validator';
-import DatePicker from 'react-datepicker';
+import Fecha from './Fecha';
 
 class Autos extends Component {
 
@@ -12,9 +12,7 @@ class Autos extends Component {
     anhoRef = React.createRef();
     cilindrosRef = React.createRef();
     lugarCompraRef = React.createRef();
-    diaCompraRef = React.createRef();
-    mesCompraRef = React.createRef();
-    anhoCompraRef = React.createRef();
+    fechaCompraRef = React.createRef();
     precioCompraRef = React.createRef();
     gasUsadaRef = React.createRef();
     precioExpModRef = React.createRef();
@@ -37,7 +35,7 @@ class Autos extends Component {
                 marca_modelo_anho: this.marcaRef.current.value + " " + this.modeloRef.current.value + " " + this.anhoRef.current.value,
                 cilindros: this.cilindrosRef.current.value,
                 lugarCompra: this.lugarCompraRef.current.value,
-                //fechaCompra: 
+                fechaCompra: this.fechaCompraRef.current.value,
                 precioCompra: this.precioCompraRef.current.value,
                 gasUsada: this.gasUsadaRef.current.value,
                 precioExpMod: this.precioExpModRef.current.value
@@ -68,17 +66,6 @@ class Autos extends Component {
                 this.setState({ autos });
             });
         });
-    }
-
-    datePicker() {
-        const [startDate, setStartDate] = this.state;
-        return (
-            <DatePicker
-                dateFormat="dd/MM/yyyy"
-                selected={startDate}
-                onChange={date => setStartDate(date)}
-            />
-        );
     }
 
     render() {
@@ -125,18 +112,15 @@ class Autos extends Component {
                                 <Form.Control type="text" placeholder="Lugar de compra" name="lugarCompra" ref={this.lugarCompraRef} onChange={this.changeState}></Form.Control>
                                 {this.validator.message('lugarCompra', this.state.autoNuevo.lugarCompra, 'required|alpha_num_space')}
                             </Form.Group>
-                            <Form.Group>
-                                <DatePicker
-                                    dateFormat="dd/MM/yyyy"
-                                    placeholderText="Fecha"
-                                ></DatePicker>
-                            </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Form.Control type="number" placeholder="Precio de compra" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Form.Control type="number" placeholder="Gasolina usada" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Fecha />
                                 </Form.Group>
                             </Form.Row>
                             <Form.Group>
