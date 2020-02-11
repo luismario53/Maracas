@@ -1,15 +1,60 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Form, Button, Col, Row, Table } from 'react-bootstrap';
 import firebase from 'firebase';
 import '../assets/css/example.css'
+import SimpleReactValidator from 'simple-react-validator';
+import DatePicker from 'react-datepicker';
 
 class Autos extends Component {
 
+    marcaRef = React.createRef();
+    modeloRef = React.createRef();
+    anhoRef = React.createRef();
+    cilindrosRef = React.createRef();
+    lugarCompraRef = React.createRef();
+    diaCompraRef = React.createRef();
+    mesCompraRef = React.createRef();
+    anhoCompraRef = React.createRef();
+    precioCompraRef = React.createRef();
+    gasUsadaRef = React.createRef();
+    precioExpModRef = React.createRef();
+
     constructor(props) {
         super(props);
+        this.validator = new SimpleReactValidator();
         this.state = {
-            autos: []
+            autos: [],
+            autoNuevo: {}
         };
+    }
+
+    changeState = () => {
+        this.setState({
+            autoNuevo: {
+                marca: this.marcaRef.current.value,
+                modelo: this.modeloRef.current.value,
+                anho: this.anhoRef.current.value,
+                marca_modelo_anho: this.marcaRef.current.value + " " + this.modeloRef.current.value + " " + this.anhoRef.current.value,
+                cilindros: this.cilindrosRef.current.value,
+                lugarCompra: this.lugarCompraRef.current.value,
+                //fechaCompra: 
+                precioCompra: this.precioCompraRef.current.value,
+                gasUsada: this.gasUsadaRef.current.value,
+                precioExpMod: this.precioExpModRef.current.value
+            }
+        });
+    }
+
+    recibirFormulario = (e) => {
+        e.preventDefault();
+        var autoNuevo = this.state.autoNuevo;
+        if (this.validator.allValid()) {
+            firebase.database().ref('Autos/').push().set(autoNuevo);
+        } else {
+            this.forceUpdate();
+            this.validator.showMessages();
+        }
+
     }
 
     componentDidMount() {
@@ -20,9 +65,20 @@ class Autos extends Component {
                     id: snapshot.key,
                     auto: snapshot.val()
                 });
-                this.setState({ autos })
+                this.setState({ autos });
             });
         });
+    }
+
+    datePicker() {
+        const [startDate, setStartDate] = this.state;
+        return (
+            <DatePicker
+                dateFormat="dd/MM/yyyy"
+                selected={startDate}
+                onChange={date => setStartDate(date)}
+            />
+        );
     }
 
     render() {
@@ -48,50 +104,50 @@ class Autos extends Component {
             <div>
                 <Row className="mt-4 col-12 ml-1">
                     <Col xs={12} md={4}>
-                        <Form>
+                        <Form onSubmit={this.recibirFormulario}>
                             <Form.Group>
-                                <Form.Control type="text" placeholder="Marca"></Form.Control>
+                                <Form.Control type="text" placeholder="Marca" name="marca" ref={this.marcaRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('marca', this.state.autoNuevo.marca, 'required|alpha_num_space')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="text" placeholder="Modelo"></Form.Control>
+                                <Form.Control type="text" placeholder="Modelo" name="modelo" ref={this.modeloRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('modelo', this.state.autoNuevo.modelo, 'required|alpha_num_space')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Año"></Form.Control>
+                                <Form.Control type="number" placeholder="Año" name="anho" ref={this.anhoRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('anho', this.state.autoNuevo.anho, 'required|integer')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Cilindros"></Form.Control>
+                                <Form.Control type="number" placeholder="Cilindros" name="cilindros" ref={this.cilindrosRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('cilindros', this.state.autoNuevo.cilindros, 'required|integer')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="text" placeholder="Lugar de compra"></Form.Control>
+                                <Form.Control type="text" placeholder="Lugar de compra" name="lugarCompra" ref={this.lugarCompraRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('lugarCompra', this.state.autoNuevo.lugarCompra, 'required|alpha_num_space')}
+                            </Form.Group>
+                            <Form.Group>
+                                <DatePicker
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholderText="Fecha"
+                                ></DatePicker>
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Día"></Form.Control>
+                                    <Form.Control type="number" placeholder="Precio de compra" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="text" placeholder="Mes"></Form.Control>
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Año"></Form.Control>
-                                </Form.Group>
-                            </Form.Row>
-                            <Form.Row>
-                                <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Precio de compra"></Form.Control>
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Gasolina usada"></Form.Control>
+                                    <Form.Control type="number" placeholder="Gasolina usada" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
                                 </Form.Group>
                             </Form.Row>
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Precio exportada y modulada"></Form.Control>
+                                <Form.Control type="number" placeholder="Precio exportada y modulada" name="precioExpMod" ref={this.precioExpModRef} onChange={this.changeState}></Form.Control>
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-2">
                                     <Button variant="warning">Limpiar Campos</Button>
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-2">
-                                    <Button variant="success">Registrar Auto</Button>
+                                    <Button type="submit" variant="success">Registrar Auto</Button>
                                 </Form.Group>
                             </Form.Row>
                         </Form>
