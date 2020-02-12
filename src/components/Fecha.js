@@ -11,10 +11,12 @@ class Fecha extends Component {
     };
 
     handleChange = date => {
-        this.setState({
-            startDate: date
-        });
+        this.setState({ startDate: date});
     };
+
+    obtenerDate = (date) => {
+        this.props.obtenerFecha(date);
+    }
 
     render() {
 
@@ -31,9 +33,11 @@ class Fecha extends Component {
                 <DatePicker
                     locale={es}
                     dateFormat='dd/MM/yyyy'
+                    onSelect={this.obtenerDate}
                     selected={this.state.startDate}
                     onChange={this.handleChange}
                     customInput={<FechaForm />}
+                    withPortal
                 />
             </div>
         );

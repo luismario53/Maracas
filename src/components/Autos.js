@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import '../assets/css/example.css'
 import SimpleReactValidator from 'simple-react-validator';
 import Fecha from './Fecha';
+import Alerta from './Alerta';
 
 class Autos extends Component {
 
@@ -12,18 +13,30 @@ class Autos extends Component {
     anhoRef = React.createRef();
     cilindrosRef = React.createRef();
     lugarCompraRef = React.createRef();
-    fechaCompraRef = React.createRef();
     precioCompraRef = React.createRef();
     gasUsadaRef = React.createRef();
     precioExpModRef = React.createRef();
+    fechaCompraRef = React.createRef();
 
     constructor(props) {
         super(props);
         this.validator = new SimpleReactValidator();
         this.state = {
             autos: [],
-            autoNuevo: {}
+            autoNuevo: {},
+            fecha: ''
         };
+    }
+
+    fechaCompra = (fechaCompra) => {
+
+        var dia = fechaCompra.getDate();
+        var mes = fechaCompra.getMonth() + 1;
+        var anho = fechaCompra.getFullYear();
+        var fecha = dia + "/" + mes + "/" + anho
+        this.setState({
+            fecha: fecha
+        })
     }
 
     changeState = () => {
@@ -35,10 +48,10 @@ class Autos extends Component {
                 marca_modelo_anho: this.marcaRef.current.value + " " + this.modeloRef.current.value + " " + this.anhoRef.current.value,
                 cilindros: this.cilindrosRef.current.value,
                 lugarCompra: this.lugarCompraRef.current.value,
-                fechaCompra: this.fechaCompraRef.current.value,
                 precioCompra: this.precioCompraRef.current.value,
                 gasUsada: this.gasUsadaRef.current.value,
-                precioExpMod: this.precioExpModRef.current.value
+                precioExpMod: this.precioExpModRef.current.value,
+                fechaCompra: this.state.fecha
             }
         });
     }
@@ -46,6 +59,7 @@ class Autos extends Component {
     recibirFormulario = (e) => {
         e.preventDefault();
         var autoNuevo = this.state.autoNuevo;
+        console.log(autoNuevo);
         if (this.validator.allValid()) {
             firebase.database().ref('Autos/').push().set(autoNuevo);
         } else {
@@ -115,16 +129,21 @@ class Autos extends Component {
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Form.Control type="number" placeholder="Precio de compra" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
+                                    {this.validator.message('marca', this.state.autoNuevo.precioCompra, 'required|alpha_num_space')}
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Form.Control type="number" placeholder="Gasolina usada" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
+                                    {this.validator.message('marca', this.state.autoNuevo.gasUsada, 'required|alpha_num_space')}
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Fecha />
+                                    <Fecha
+                                        obtenerFecha={this.fechaCompra}
+                                    />
                                 </Form.Group>
                             </Form.Row>
                             <Form.Group>
                                 <Form.Control type="number" placeholder="Precio exportada y modulada" name="precioExpMod" ref={this.precioExpModRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('marca', this.state.autoNuevo.precioExpMod, 'required|alpha_num_space')}
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-2">
@@ -132,6 +151,9 @@ class Autos extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-2">
                                     <Button type="submit" variant="success">Registrar Auto</Button>
+                                </Form.Group>
+                                <Form.Group as={Col} className="mt-2">
+                                    <Alerta />
                                 </Form.Group>
                             </Form.Row>
                         </Form>
