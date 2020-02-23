@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import '../assets/css/example.css'
 import SimpleReactValidator from 'simple-react-validator';
 import Fecha from './Fecha';
-import Alerta from './Alerta';
+import swal from 'sweetalert';
 
 class Autos extends Component {
 
@@ -61,11 +61,20 @@ class Autos extends Component {
         var autoNuevo = this.state.autoNuevo;
         if (this.validator.allValid()) {
             firebase.database().ref('Autos/').push().set(autoNuevo);
+            swal(
+                'Agregado Exitosamente',
+                'El auto ha sido agregado exitosamente',
+                'success'
+            );
+            this.limpiarCampos();
         } else {
             this.forceUpdate();
             this.validator.showMessages();
         }
+    }
 
+    limpiarCampos = () => {
+        document.getElementById('formAutos').reset();
     }
 
     componentDidMount() {
@@ -104,7 +113,7 @@ class Autos extends Component {
             <div>
                 <Row className="mt-4 col-12 ml-1">
                     <Col xs={12} md={4}>
-                        <Form onSubmit={this.recibirFormulario}>
+                        <Form onSubmit={this.recibirFormulario} id="formAutos">
                             <Form.Group>
                                 <Form.Control type="text" placeholder="Marca" name="marca" ref={this.marcaRef} onChange={this.changeState}></Form.Control>
                                 {this.validator.message('marca', this.state.autoNuevo.marca, 'required|alpha_num_space')}
@@ -146,13 +155,10 @@ class Autos extends Component {
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-2">
-                                    <Button variant="warning">Limpiar Campos</Button>
+                                    <Button variant="warning" onClick={this.limpiarCampos}>Limpiar</Button>
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-2">
-                                    <Button type="submit" variant="success">Registrar Auto</Button>
-                                </Form.Group>
-                                <Form.Group as={Col} className="mt-2">
-                                    <Alerta />
+                                    <Button type="submit" variant="success">Registrar</Button>
                                 </Form.Group>
                             </Form.Row>
                         </Form>
