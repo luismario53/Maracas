@@ -59,7 +59,6 @@ class Autos extends Component {
     recibirFormulario = (e) => {
         e.preventDefault();
         var autoNuevo = this.state.autoNuevo;
-        console.log(autoNuevo);
         if (this.validator.allValid()) {
             firebase.database().ref('Autos/').push().set(autoNuevo);
         } else {

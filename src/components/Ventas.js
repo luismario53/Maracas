@@ -25,6 +25,10 @@ class Ventas extends Component {
         });
     }
 
+    buscarAuto = (e) => {
+        console.log(this.state.autos);
+    }
+
     render() {
 
         const { autos } = this.state;
@@ -36,10 +40,7 @@ class Ventas extends Component {
                 <Row className="mt-4 col-12 ml-1 estilo">
                     <Col xs={12} md={4}>
                         <InputGroup className="mb-3">
-                            <FormControl placeholder="Buscar Auto"></FormControl>
-                            <InputGroup.Append>
-                                <Button variant="outline-secondary">Buscar</Button>
-                            </InputGroup.Append>
+                            <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
                         </InputGroup>
                         <Card>
                             <ListGroup className="properties-autos" variant="flush">
@@ -143,11 +144,40 @@ class Ventas extends Component {
                                     <td>500</td>
                                     <td><Button variant="outline-danger">Eliminar</Button></td>
                                 </tr>
+                                <tr>
+                                    <td>Ford Focus 2008</td>
+                                    <td>Bugia radiador</td>
+                                    <td>3</td>
+                                    <td>500</td>
+                                    <td><Button variant="outline-danger">Eliminar</Button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ford Focus 2008</td>
+                                    <td>Bugia radiador</td>
+                                    <td>3</td>
+                                    <td>500</td>
+                                    <td><Button variant="outline-danger">Eliminar</Button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ford Focus 2008</td>
+                                    <td>Bugia radiador</td>
+                                    <td>3</td>
+                                    <td>500</td>
+                                    <td><Button variant="outline-danger">Eliminar</Button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ford Focus 2008</td>
+                                    <td>Bugia radiador</td>
+                                    <td>3</td>
+                                    <td>500</td>
+                                    <td><Button variant="outline-danger">Eliminar</Button></td>
+                                </tr>
                             </tbody>
                         </Table>
                     </Col>
                 </Row>
-                <Row className="mt-4 col-12 ml-1">
+                <br />
+                <Row className="mt-5 col-12 ml-1">
                     <Col xs={12} md={4}>
                         <Form>
                             <Form.Group>
