@@ -20,7 +20,11 @@ class Autos extends Component {
 
     constructor(props) {
         super(props);
-        this.validator = new SimpleReactValidator();
+        this.validator = new SimpleReactValidator({
+            messages: {
+                default: 'Falta información'
+            },
+        });
         this.state = {
             autos: [],
             autoNuevo: {},
@@ -91,7 +95,6 @@ class Autos extends Component {
     }
 
     render() {
-
         const { autos } = this.state;
         const listaAutos = autos.map(auto => {
             return (
@@ -136,11 +139,11 @@ class Autos extends Component {
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Precio de compra" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
+                                    <Form.Control type="number" placeholder="Precio" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
                                     {this.validator.message('marca', this.state.autoNuevo.precioCompra, 'required|alpha_num_space')}
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Gasolina usada" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
+                                    <Form.Control type="number" placeholder="Gasolina" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
                                     {this.validator.message('marca', this.state.autoNuevo.gasUsada, 'required|alpha_num_space')}
                                 </Form.Group>
                                 <Form.Group as={Col}>
