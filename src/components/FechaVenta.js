@@ -28,7 +28,7 @@ class Fecha extends Component {
 
         const FechaForm = ({ value, onClick }) => {
             return (
-                <Button onClick={onClick} variant='outline-dark' block>
+                <Button onClick={onClick} variant='outline-info' block>
                     {value}
                 </Button>
             );

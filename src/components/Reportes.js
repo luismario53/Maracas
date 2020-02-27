@@ -13,10 +13,10 @@ class Reportes extends Component {
                     <Fecha />
                     <Col className="form-inline">
                         <Col>
-                            <Button className="properties-button" variant="secondary">Reestablecer</Button>
+                            <Button className="properties-button" variant="outline-secondary">Reestablecer</Button>
                         </Col>
                         <Col>
-                            <Button className="properties-button" variant="primary">Buscar</Button>
+                            <Button className="properties-button" variant="info">Buscar</Button>
                         </Col>
                     </Col>
                 </Row>

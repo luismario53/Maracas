@@ -55,7 +55,7 @@ class Autos extends Component {
                 precioCompra: this.precioCompraRef.current.value,
                 gasUsada: this.gasUsadaRef.current.value,
                 precioExpMod: this.precioExpModRef.current.value,
-                fechaCompra: this.state.fecha
+                fechaCompra: this.state.fecha,
             }
         });
     }
@@ -82,8 +82,8 @@ class Autos extends Component {
     }
 
     componentDidMount() {
-        var { autos } = this.state;
         firebase.database().ref('Autos/').on('value', snap => {
+            var autos = [];
             snap.forEach(snapshot => {
                 autos.push({
                     id: snapshot.key,
@@ -105,9 +105,9 @@ class Autos extends Component {
                     <td>{auto.auto.cilindros}</td>
                     <td>{auto.auto.lugarCompra}</td>
                     <td>{auto.auto.fechaCompra}</td>
-                    <td>{auto.auto.precioAuto}</td>
-                    <td>{auto.auto.gas}</td>
-                    <td>{auto.auto.info}</td>
+                    <td>{auto.auto.precioCompra}</td>
+                    <td>{auto.auto.gasUsada}</td>
+                    <td>{auto.auto.precioExpMod}</td>
                 </tr>
             );
         });
@@ -158,10 +158,10 @@ class Autos extends Component {
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-2">
-                                    <Button variant="warning" onClick={this.limpiarCampos}>Limpiar</Button>
+                                    <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar</Button>
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-2">
-                                    <Button type="submit" variant="success">Registrar</Button>
+                                    <Button type="submit" variant="info">Registrar</Button>
                                 </Form.Group>
                             </Form.Row>
                         </Form>
@@ -181,7 +181,7 @@ class Autos extends Component {
                                     <th>Precio Exp Mod</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbodyId">
                                 {listaAutos}
                             </tbody>
                         </Table>

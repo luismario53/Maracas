@@ -2,38 +2,141 @@ import React, { Component } from 'react';
 import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button } from 'react-bootstrap';
 import '../assets/css/example.css'
 import firebase from 'firebase';
+import swal from 'sweetalert'
+import SimpleReactValidator from 'simple-react-validator';
 
 class Ventas extends Component {
 
+    nombrePiezaRef = React.createRef();
+    cantidadPiezaRef = React.createRef();
+    precioPiezaRef = React.createRef();
+
     constructor(props) {
         super(props);
+        this.validator = new SimpleReactValidator({
+            messages: {
+                default: 'Falta información'
+            },
+        });
         this.state = {
-            autos: []
+            autos: [],
+            piezaNueva: {},
+            carrito: [],
+            currentAuto: {},
+            total: '',
+            password: ''
         };
     }
 
     componentDidMount() {
-        var { autos } = this.state;
         firebase.database().ref('Autos/').on('value', snap => {
+            var autos = [];
+            var carrito = [];
             snap.forEach(snapshot => {
                 autos.push({
                     id: snapshot.key,
                     auto: snapshot.val()
                 });
+                var autoFullName = autos[autos.length - 1].auto.marca_modelo_anho;
                 this.setState({ autos })
+                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/").on('value', snapChild => {
+                    snapChild.forEach(snapChildChild => {
+                        carrito.push({
+                            id: snapChildChild.key,
+                            idAuto: snapshot.key,
+                            nombreAuto: autoFullName,
+                            pieza: snapChildChild.val()
+                        });
+                        this.setState({ carrito })
+                    });
+                });
             });
+        });
+        this.calcularTotal();
+    }
+
+    changeState = () => {
+        this.setState({
+            piezaNueva: {
+                nombre: this.nombrePiezaRef.current.value,
+                cantidad: this.cantidadPiezaRef.current.value,
+                precio: this.precioPiezaRef.current.value
+            }
         });
     }
 
+    calcularTotal = () => {
+        
+    }
+
+    recibirFormulario = (e) => {
+        e.preventDefault();
+        var piezaNueva = this.state.piezaNueva;
+        if (this.validator.allValid()) {
+            firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
+            swal(
+                'Agregado Exitosamente',
+                'Pieza agregada exitosamente',
+                'success'
+            );
+            this.limpiarCampos();
+            this.calcularTotal();
+        } else {
+            this.forceUpdate();
+            this.validator.showMessages();
+        }
+    }
+
+    limpiarCampos = () => {
+        document.getElementById('formPiezas').reset();
+    }
+
+    seleccionarAuto = (autoId, autoFullName) => {
+        this.setState({
+            currentAuto: {
+                id: autoId,
+                autoFullName: autoFullName
+            }
+        });
+    }
+
+    realizarVenta = (e) => {
+        const { carrito } = this.state;
+
+        e.preventDefault();
+    }
+
+    //Pendiente
     buscarAuto = (e) => {
-        console.log(this.state.autos);
+        console.log(e.target.value);
+        var autos = this.state.autos;
+        var result = autos.filter(auto => auto.auto.marca_modelo_anho.startsWith(e.target.value));
+        this.setState({ autos: result })
+    }
+
+    eliminarPieza = (idPieza, idAuto) => {
+        const { carrito } = this.state;
+        var index = carrito.findIndex(x => x.id === idPieza);
+        carrito.splice(index, 1);
+        this.setState({ carrito })
+        firebase.database().ref('Autos/' + idAuto + '/Piezas/' + idPieza).remove();
     }
 
     render() {
 
         const { autos } = this.state;
+        const { carrito } = this.state;
         const listaAutos = autos.map(auto => {
-            return <ListGroup.Item key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
+            return <ListGroup.Item action onClick={() => this.seleccionarAuto(auto.id, auto.auto.marca_modelo_anho)} key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
+        });
+        const listaCarrito = carrito.map(pieza => {
+            return <tr key={pieza.id}>
+                <td>{pieza.nombreAuto}</td>
+                <td>{pieza.pieza.nombre}</td>
+                <td>{pieza.pieza.cantidad}</td>
+                <td>{pieza.pieza.precio}</td>
+                <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
+            </tr>
         });
         return (
             <div>
@@ -60,155 +163,58 @@ class Ventas extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>Ford Focus 2008</td>
-                                    <td>Bugia radiador</td>
-                                    <td>3</td>
-                                    <td>500</td>
-                                    <td><Button variant="outline-danger">Eliminar</Button></td>
-                                </tr>
+                                {listaCarrito}
                             </tbody>
                         </Table>
                     </Col>
                 </Row>
-                
+
                 <Row className="mt-4 col-12 ml-1">
                     <Col xs={12} md={4}>
-                        <Form>
+                        <Form onSubmit={this.recibirFormulario} id="formPiezas">
                             <Form.Group>
-                                <Form.Control type="text" placeholder="Nombre de la pieza"></Form.Control>
+                                <Form.Label name="nombreAuto">
+                                    <strong>
+                                        {this.state.currentAuto !== undefined &&
+                                            this.state.currentAuto.autoFullName
+                                        }
+                                    </strong>
+                                </Form.Label>
+                                {this.validator.message('nombreAuto', this.state.currentAuto.autoFullName, 'required|alpha_num_space')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Cantidad"></Form.Control>
+                                <Form.Control type="text" placeholder="Nombre de la pieza" name="nombre" ref={this.nombrePiezaRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required|alpha_num_space')}
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control className="properties" as="textarea" rows="3" placeholder="Descripción"></Form.Control>
+                                <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('cantidad', this.state.piezaNueva.cantidad, 'required|integer')}
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState}></Form.Control>
+                                {this.validator.message('precio', this.state.piezaNueva.precio, 'required|integer')}
                             </Form.Group>
                             <Form.Row>
                                 <Form.Group as={Col} className="mt-1">
-                                    <Button variant="warning">Limpiar Campos</Button>
+                                    <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar Campos</Button>
                                 </Form.Group>
                                 <Form.Group as={Col} className="mt-1">
-                                    <Button variant="success">Agregar Pieza</Button>
+                                    <Button type="submit" variant="info">Agregar Pieza</Button>
                                 </Form.Group>
                             </Form.Row>
                         </Form>
                     </Col>
                     <Col xs={6} md={8} className="col-8">
-                        <Form className="properties-pagar">
+                        <Form onSubmit={this.realizarVenta} className="properties-pagar">
                             <Form.Group>
-                                <Form.Control type="number" placeholder="Total" readOnly></Form.Control>
+                                <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{this.state.total}</Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="password" placeholder="Contraseña"></Form.Control>
+                                <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef}></Form.Control>
+
                             </Form.Group>
                             <Form.Group>
-                                <Button className="properties-button" variant="success">Pagar</Button>
+                                <Button type="submit" className="properties-button" variant="info">Pagar</Button>
                             </Form.Group>
                         </Form>
                     </Col>

@@ -1,3 +1,9 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .properties-pagar{
     margin-left: 50vw;
 }
@@ -9,6 +15,7 @@
 .properties-autos{
     overflow-x: hidden;
     max-height: 50vh;
+    cursor: pointer;
 }
 
 .properties-tabla-autos{
