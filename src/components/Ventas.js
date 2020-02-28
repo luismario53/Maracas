@@ -23,7 +23,6 @@ class Ventas extends Component {
             piezaNueva: {},
             carrito: [],
             currentAuto: {},
-            total: '',
             password: ''
         };
     }
@@ -52,7 +51,6 @@ class Ventas extends Component {
                 });
             });
         });
-        this.calcularTotal();
     }
 
     changeState = () => {
@@ -63,10 +61,6 @@ class Ventas extends Component {
                 precio: this.precioPiezaRef.current.value
             }
         });
-    }
-
-    calcularTotal = () => {
-        
     }
 
     recibirFormulario = (e) => {
@@ -80,7 +74,6 @@ class Ventas extends Component {
                 'success'
             );
             this.limpiarCampos();
-            this.calcularTotal();
         } else {
             this.forceUpdate();
             this.validator.showMessages();
@@ -138,6 +131,9 @@ class Ventas extends Component {
                 <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
             </tr>
         });
+        const totalPagar = carrito.reduce((total, arr) => {
+            return parseInt(total) + parseInt(arr.pieza.precio);
+        }, 0);
         return (
             <div>
                 <Row className="mt-4 col-12 ml-1 estilo">
@@ -207,7 +203,8 @@ class Ventas extends Component {
                     <Col xs={6} md={8} className="col-8">
                         <Form onSubmit={this.realizarVenta} className="properties-pagar">
                             <Form.Group>
-                                <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{this.state.total}</Form.Control>
+                                <Form.Label>Total</Form.Label>
+                                <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef}></Form.Control>
