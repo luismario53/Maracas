@@ -10,9 +10,15 @@ class Ventas extends Component {
     nombrePiezaRef = React.createRef();
     cantidadPiezaRef = React.createRef();
     precioPiezaRef = React.createRef();
+    passwordRef = React.createRef();
 
     constructor(props) {
         super(props);
+        this.validatorPassword = new SimpleReactValidator({
+            messages: {
+                default: "Falta la contraseña"
+            }
+        });
         this.validator = new SimpleReactValidator({
             messages: {
                 default: 'Falta información'
@@ -50,6 +56,12 @@ class Ventas extends Component {
                     });
                 });
             });
+        });
+    }
+
+    passwordHandle = () => {
+        this.setState({
+            password: this.passwordRef.current.value
         });
     }
 
@@ -94,9 +106,20 @@ class Ventas extends Component {
     }
 
     realizarVenta = (e) => {
-        const { carrito } = this.state;
-
         e.preventDefault();
+        const { carrito } = this.state;
+        if (this.validatorPassword.allValid()) {
+            //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
+            swal(
+                'Venta Exitosa',
+                'Venta realizada exitosamente',
+                'success'
+            );
+            //this.limpiarCampos();
+        } else {
+            this.forceUpdate();
+            this.validatorPassword.showMessages();
+        }
     }
 
     //Pendiente
@@ -207,8 +230,8 @@ class Ventas extends Component {
                                 <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef}></Form.Control>
-
+                                <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef} onChange={this.passwordHandle}></Form.Control>
+                                {this.validatorPassword.message('password', this.state.password, 'required')}
                             </Form.Group>
                             <Form.Group>
                                 <Button type="submit" className="properties-button" variant="info">Pagar</Button>
