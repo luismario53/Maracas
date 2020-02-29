@@ -5,6 +5,29 @@ import firebase from 'firebase';
 import swal from 'sweetalert'
 import SimpleReactValidator from 'simple-react-validator';
 
+import FadeIn from 'react-fade-in';
+import Lottie from 'react-lottie';
+import ReactLoading from 'react-loading';
+import * as legoData from "./legoloading.json";
+import * as doneData from "./doneloading.json";
+
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: legoData.default,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
+const defaultOptions2 = {
+    loop: false,
+    autoplay: true,
+    animationData: doneData.default,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
+
 class Ventas extends Component {
 
     nombrePiezaRef = React.createRef();
@@ -29,7 +52,8 @@ class Ventas extends Component {
             piezaNueva: {},
             carrito: [],
             currentAuto: {},
-            password: ''
+            password: '',
+            done: undefined
         };
     }
 
@@ -56,6 +80,12 @@ class Ventas extends Component {
                     });
                 });
             });
+            setTimeout(() => {
+                this.setState({ loading: true });
+                setTimeout(() => {
+                    this.setState({ done: true });
+                }, 500);
+            }, 500);
         });
     }
 
@@ -158,88 +188,103 @@ class Ventas extends Component {
             return parseInt(total) + parseInt(arr.pieza.precio);
         }, 0);
         return (
-            <div>
-                <Row className="mt-4 col-12 ml-1 estilo">
-                    <Col xs={12} md={4}>
-                        <InputGroup className="mb-3">
-                            <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
-                        </InputGroup>
-                        <Card>
-                            <ListGroup className="properties-autos" variant="flush">
-                                {listaAutos}
-                            </ListGroup>
-                        </Card>
-                    </Col>
-                    <Col xs={6} md={8} className="col-8 properties-autos">
-                        <Table responsive striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>Auto</th>
-                                    <th>Pieza</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {listaCarrito}
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
 
-                <Row className="mt-4 col-12 ml-1">
-                    <Col xs={12} md={4}>
-                        <Form onSubmit={this.recibirFormulario} id="formPiezas">
-                            <Form.Group>
-                                <Form.Label name="nombreAuto">
-                                    <strong>
-                                        {this.state.currentAuto !== undefined &&
-                                            this.state.currentAuto.autoFullName
-                                        }
-                                    </strong>
-                                </Form.Label>
-                                {this.validator.message('nombreAuto', this.state.currentAuto.autoFullName, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="text" placeholder="Nombre de la pieza" name="nombre" ref={this.nombrePiezaRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('cantidad', this.state.piezaNueva.cantidad, 'required|integer')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('precio', this.state.piezaNueva.precio, 'required|integer')}
-                            </Form.Group>
-                            <Form.Row>
-                                <Form.Group as={Col} className="mt-1">
-                                    <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar Campos</Button>
-                                </Form.Group>
-                                <Form.Group as={Col} className="mt-1">
-                                    <Button type="submit" variant="info">Agregar Pieza</Button>
-                                </Form.Group>
-                            </Form.Row>
-                        </Form>
-                    </Col>
-                    <Col xs={6} md={8} className="col-8">
-                        <Form onSubmit={this.realizarVenta} className="properties-pagar">
-                            <Form.Group>
-                                <Form.Label>Total</Form.Label>
-                                <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef} onChange={this.passwordHandle}></Form.Control>
-                                {this.validatorPassword.message('password', this.state.password, 'required')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Button type="submit" className="properties-button" variant="info">Pagar</Button>
-                            </Form.Group>
-                        </Form>
-                    </Col>
-                </Row>
-            </div >
+            <div>
+                {!this.state.done ? (
+                    <FadeIn>
+                        <div className="mt-5 d-flex justify-content-center align-items-center">
+                            {!this.state.loading ? (
+                                <Lottie options={defaultOptions} height={400} width={400} />
+                            ) : (
+                                    <Lottie options={defaultOptions2} height={400} width={400} />
+                                )}
+                        </div>
+                    </FadeIn>
+                ) : (
+                        <div>
+                            <Row className="mt-4 col-12 ml-1 estilo">
+                                <Col xs={12} md={4}>
+                                    <InputGroup className="mb-3">
+                                        <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
+                                    </InputGroup>
+                                    <Card>
+                                        <ListGroup className="properties-autos" variant="flush">
+                                            {listaAutos}
+                                        </ListGroup>
+                                    </Card>
+                                </Col>
+                                <Col xs={6} md={8} className="col-8 properties-autos">
+                                    <Table responsive striped bordered hover size="sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Auto</th>
+                                                <th>Pieza</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listaCarrito}
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+
+                            <Row className="mt-4 col-12 ml-1">
+                                <Col xs={12} md={4}>
+                                    <Form onSubmit={this.recibirFormulario} id="formPiezas">
+                                        <Form.Group>
+                                            <Form.Label name="nombreAuto">
+                                                <strong>
+                                                    {this.state.currentAuto !== undefined &&
+                                                        this.state.currentAuto.autoFullName
+                                                    }
+                                                </strong>
+                                            </Form.Label>
+                                            {this.validator.message('nombreAuto', this.state.currentAuto.autoFullName, 'required|alpha_num_space')}
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Form.Control type="text" placeholder="Nombre de la pieza" name="nombre" ref={this.nombrePiezaRef} onChange={this.changeState}></Form.Control>
+                                            {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required|alpha_num_space')}
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState}></Form.Control>
+                                            {this.validator.message('cantidad', this.state.piezaNueva.cantidad, 'required|integer')}
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState}></Form.Control>
+                                            {this.validator.message('precio', this.state.piezaNueva.precio, 'required|integer')}
+                                        </Form.Group>
+                                        <Form.Row>
+                                            <Form.Group as={Col} className="mt-1">
+                                                <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar Campos</Button>
+                                            </Form.Group>
+                                            <Form.Group as={Col} className="mt-1">
+                                                <Button type="submit" variant="info">Agregar Pieza</Button>
+                                            </Form.Group>
+                                        </Form.Row>
+                                    </Form>
+                                </Col>
+                                <Col xs={6} md={8} className="col-8">
+                                    <Form onSubmit={this.realizarVenta} className="properties-pagar">
+                                        <Form.Group>
+                                            <Form.Label>Total</Form.Label>
+                                            <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef} onChange={this.passwordHandle}></Form.Control>
+                                            {this.validatorPassword.message('password', this.state.password, 'required')}
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Button type="submit" className="properties-button" variant="info">Pagar</Button>
+                                        </Form.Group>
+                                    </Form>
+                                </Col>
+                            </Row>
+                        </div>
+                    )}
+            </div>
         );
     }
 }

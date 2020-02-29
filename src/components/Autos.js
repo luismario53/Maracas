@@ -5,6 +5,29 @@ import '../assets/css/example.css'
 import SimpleReactValidator from 'simple-react-validator';
 import Fecha from './Fecha';
 import swal from 'sweetalert';
+//
+import FadeIn from 'react-fade-in';
+import Lottie from 'react-lottie';
+import ReactLoading from 'react-loading';
+import * as legoData from "./legoloading.json";
+import * as doneData from "./doneloading.json";
+
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: legoData.default,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
+const defaultOptions2 = {
+    loop: false,
+    autoplay: true,
+    animationData: doneData.default,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
 
 class Autos extends Component {
 
@@ -28,7 +51,8 @@ class Autos extends Component {
         this.state = {
             autos: [],
             autoNuevo: {},
-            fecha: ''
+            fecha: '',
+            done: undefined
         };
     }
 
@@ -91,6 +115,12 @@ class Autos extends Component {
                 });
                 this.setState({ autos });
             });
+            setTimeout(() => {
+                this.setState({ loading: true });
+                setTimeout(() => {
+                    this.setState({ done: true });
+                }, 500);
+            }, 500);
         });
     }
 
@@ -114,79 +144,91 @@ class Autos extends Component {
 
         return (
             <div>
-                <Row className="mt-4 col-12 ml-1">
-                    <Col xs={12} md={4}>
-                        <Form onSubmit={this.recibirFormulario} id="formAutos">
-                            <Form.Group>
-                                <Form.Control type="text" placeholder="Marca" name="marca" ref={this.marcaRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('marca', this.state.autoNuevo.marca, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="text" placeholder="Modelo" name="modelo" ref={this.modeloRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('modelo', this.state.autoNuevo.modelo, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="number" placeholder="Año" name="anho" ref={this.anhoRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('anho', this.state.autoNuevo.anho, 'required|integer')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="number" placeholder="Cilindros" name="cilindros" ref={this.cilindrosRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('cilindros', this.state.autoNuevo.cilindros, 'required|integer')}
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="text" placeholder="Lugar de compra" name="lugarCompra" ref={this.lugarCompraRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('lugarCompra', this.state.autoNuevo.lugarCompra, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Row>
-                                <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Precio" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
-                                    {this.validator.message('marca', this.state.autoNuevo.precioCompra, 'required|alpha_num_space')}
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Control type="number" placeholder="Gasolina" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
-                                    {this.validator.message('marca', this.state.autoNuevo.gasUsada, 'required|alpha_num_space')}
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Fecha
-                                        obtenerFecha={this.fechaCompra}
-                                    />
-                                </Form.Group>
-                            </Form.Row>
-                            <Form.Group>
-                                <Form.Control type="number" placeholder="Precio exportada y modulada" name="precioExpMod" ref={this.precioExpModRef} onChange={this.changeState}></Form.Control>
-                                {this.validator.message('marca', this.state.autoNuevo.precioExpMod, 'required|alpha_num_space')}
-                            </Form.Group>
-                            <Form.Row>
-                                <Form.Group as={Col} className="mt-2">
-                                    <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar</Button>
-                                </Form.Group>
-                                <Form.Group as={Col} className="mt-2">
-                                    <Button type="submit" variant="info">Registrar</Button>
-                                </Form.Group>
-                            </Form.Row>
-                        </Form>
-                    </Col>
-                    <Col xs={6} md={8} className="col-8 properties-tabla-autos">
-                        <Table responsive striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>Marca</th>
-                                    <th>Model</th>
-                                    <th>Año</th>
-                                    <th>Cilindros</th>
-                                    <th>Lugar Compra</th>
-                                    <th>Fecha Compra</th>
-                                    <th>Precio</th>
-                                    <th>Gasolina Usada</th>
-                                    <th>Precio Exp Mod</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyId">
-                                {listaAutos}
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
+                {!this.state.done ? (
+                    <FadeIn>
+                        <div className="mt-5 d-flex justify-content-center align-items-center">
+                            {!this.state.loading ? (
+                                <Lottie options={defaultOptions} height={400} width={400} />
+                            ) : (
+                                    <Lottie options={defaultOptions} height={400} width={400} />
+                                )}
+                        </div>
+                    </FadeIn>
+                ) : (
+                        <Row className="mt-4 col-12 ml-1">
+                            <Col xs={12} md={4}>
+                                <Form onSubmit={this.recibirFormulario} id="formAutos">
+                                    <Form.Group>
+                                        <Form.Control type="text" placeholder="Marca" name="marca" ref={this.marcaRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('marca', this.state.autoNuevo.marca, 'required|alpha_num_space')}
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Control type="text" placeholder="Modelo" name="modelo" ref={this.modeloRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('modelo', this.state.autoNuevo.modelo, 'required|alpha_num_space')}
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Control type="number" placeholder="Año" name="anho" ref={this.anhoRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('anho', this.state.autoNuevo.anho, 'required|integer')}
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Control type="number" placeholder="Cilindros" name="cilindros" ref={this.cilindrosRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('cilindros', this.state.autoNuevo.cilindros, 'required|integer')}
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Control type="text" placeholder="Lugar de compra" name="lugarCompra" ref={this.lugarCompraRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('lugarCompra', this.state.autoNuevo.lugarCompra, 'required|alpha_num_space')}
+                                    </Form.Group>
+                                    <Form.Row>
+                                        <Form.Group as={Col}>
+                                            <Form.Control type="number" placeholder="Precio" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
+                                            {this.validator.message('marca', this.state.autoNuevo.precioCompra, 'required|alpha_num_space')}
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Control type="number" placeholder="Gasolina" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
+                                            {this.validator.message('marca', this.state.autoNuevo.gasUsada, 'required|alpha_num_space')}
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Fecha
+                                                obtenerFecha={this.fechaCompra}
+                                            />
+                                        </Form.Group>
+                                    </Form.Row>
+                                    <Form.Group>
+                                        <Form.Control type="number" placeholder="Precio exportada y modulada" name="precioExpMod" ref={this.precioExpModRef} onChange={this.changeState}></Form.Control>
+                                        {this.validator.message('marca', this.state.autoNuevo.precioExpMod, 'required|alpha_num_space')}
+                                    </Form.Group>
+                                    <Form.Row>
+                                        <Form.Group as={Col} className="mt-2">
+                                            <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar</Button>
+                                        </Form.Group>
+                                        <Form.Group as={Col} className="mt-2">
+                                            <Button type="submit" variant="info">Registrar</Button>
+                                        </Form.Group>
+                                    </Form.Row>
+                                </Form>
+                            </Col>
+                            <Col xs={6} md={8} className="col-8 properties-tabla-autos">
+                                <Table responsive striped bordered hover size="sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Marca</th>
+                                            <th>Model</th>
+                                            <th>Año</th>
+                                            <th>Cilindros</th>
+                                            <th>Lugar Compra</th>
+                                            <th>Fecha Compra</th>
+                                            <th>Precio</th>
+                                            <th>Gasolina Usada</th>
+                                            <th>Precio Exp Mod</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyId">
+                                        {listaAutos}
+                                    </tbody>
+                                </Table>
+                            </Col>
+                        </Row>
+                    )}
             </div>
         );
     }
