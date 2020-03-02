@@ -20,7 +20,7 @@ input::-webkit-inner-spin-button {
 
 .properties-tabla-autos{
     overflow-x: hidden;
-    max-height: 100vh;
+    max-height: 80vh;
 }
 
 .properties-button{

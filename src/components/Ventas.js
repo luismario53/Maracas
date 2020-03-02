@@ -203,7 +203,7 @@ class Ventas extends Component {
                     </FadeIn>
                 ) : (
                         <div>
-                            <Row className="mt-4 col-12 ml-1 estilo">
+                            <Row className="mt-3 col-12 ml-1 estilo">
                                 <Col xs={12} md={4}>
                                     <InputGroup className="mb-3">
                                         <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
@@ -233,7 +233,7 @@ class Ventas extends Component {
                                 </Col>
                             </Row>
 
-                            <Row className="mt-4 col-12 ml-1">
+                            <Row className="mt-3 col-12 ml-1">
                                 <Col xs={12} md={4}>
                                     <Form onSubmit={this.recibirFormulario} id="formPiezas">
                                         <Form.Group>

@@ -222,7 +222,7 @@ class Ventas extends Component {
                     </FadeIn>
                 ) : (
                         <div>
-                            <Row className="mt-4 col-12 ml-1">
+                            <Row className="mt-3 col-12 ml-1">
                                 <Col xs={12} md={4}>
                                     <InputGroup className="mb-3">
                                         <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
@@ -232,36 +232,9 @@ class Ventas extends Component {
                                             {listaAutos}
                                         </ListGroup>
                                     </Card>
-                                </Col>
-                                <Col xs={6} md={8} className="col-8">
-                                    <InputGroup className="mb-3">
-                                        <FormControl placeholder="Buscar Pieza" onKeyUp={this.buscarPieza}></FormControl>
-                                    </InputGroup>
-                                    <Col className="properties-autos">
-                                        <Table responsive striped bordered hover size="sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Auto</th>
-                                                    <th>Pieza</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Precio Unitario</th>
-                                                    <th>Precio</th>
-                                                    <th>Opciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {listaPiezas}
-                                            </tbody>
-                                        </Table>
-                                    </Col>
-                                </Col>
-                            </Row>
-
-                            <Row className="mt-4 col-12 ml-1">
-                                <Col xs={12} md={4}>
                                     <Form onSubmit={this.recibirFormulario} id="formPiezas">
                                         <Form.Group>
-                                            <Form.Label name="nombreAuto">
+                                            <Form.Label name="nombreAuto" className="mt-3">
                                                 <strong>
                                                     {this.state.currentAuto !== undefined && this.state.currentAuto !== null &&
                                                         this.state.currentAuto.autoName
@@ -291,6 +264,28 @@ class Ventas extends Component {
                                             </Form.Group>
                                         </Form.Row>
                                     </Form>
+                                </Col>
+                                <Col xs={6} md={8} className="col-8">
+                                    <InputGroup className="mb-3">
+                                        <FormControl placeholder="Buscar Pieza" onKeyUp={this.buscarPieza}></FormControl>
+                                    </InputGroup>
+                                    <Col className="properties-tabla-autos">
+                                        <Table responsive striped bordered hover size="sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Auto</th>
+                                                    <th>Pieza</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Precio</th>
+                                                    <th>Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {listaPiezas}
+                                            </tbody>
+                                        </Table>
+                                    </Col>
                                 </Col>
                             </Row>
                         </div>
