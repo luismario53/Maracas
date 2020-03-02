@@ -8,13 +8,13 @@ import swal from 'sweetalert';
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
 import ReactLoading from 'react-loading';
-import * as legoData from "./legoloading.json";
+import * as carData from "./blue-car.json";
 import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
     autoplay: true,
-    animationData: legoData.default,
+    animationData: carData.default,
     rendererSettings: {
         preserveAspectRatio: "xMidYMid slice"
     }
@@ -43,8 +43,8 @@ class Reportes extends Component {
             this.setState({ loading: true });
             setTimeout(() => {
                 this.setState({ done: true });
-            }, 500);
-        }, 500);
+            }, 250);
+        }, 250);
     }
 
     render() {
@@ -56,7 +56,7 @@ class Reportes extends Component {
                             {!this.state.loading ? (
                                 <Lottie options={defaultOptions} height={400} width={400} />
                             ) : (
-                                    <Lottie options={defaultOptions2} height={400} width={400} />
+                                    <Lottie options={defaultOptions} height={400} width={400} />
                                 )}
                         </div>
                     </FadeIn>

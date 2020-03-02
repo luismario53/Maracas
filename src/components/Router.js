@@ -7,6 +7,7 @@ import Autos from './Autos';
 import Reportes from './Reportes';
 import Navigation from './Navigation';
 import Inicio from './Inicio';
+import Piezas from './Piezas';
 
 class Router extends Component {
   render() {
@@ -17,6 +18,7 @@ class Router extends Component {
         <Switch>
           <Route exact path="/" component={Inicio} />
           <Route exact path="/autos" component={Autos} />
+          <Route exact path="/piezas" component={Piezas}></Route>
           <Route exact path="/ventas" component={Ventas} />
           <Route exact path="/reportes" component={Reportes} />
         </Switch>

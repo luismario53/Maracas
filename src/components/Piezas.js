@@ -51,7 +51,8 @@ class Ventas extends Component {
             autos: [],
             autosBusqueda: [],
             piezaNueva: {},
-            carrito: [],
+            piezas: [],
+            piezasBusqueda: [],
             currentAuto: {},
             password: '',
             done: undefined
@@ -61,7 +62,7 @@ class Ventas extends Component {
     componentDidMount() {
         firebase.database().ref('Autos/').on('value', snap => {
             var autos = [];
-            var carrito = [];
+            var piezas = [];
             snap.forEach(snapshot => {
                 autos.push({
                     id: snapshot.key,
@@ -70,15 +71,16 @@ class Ventas extends Component {
                 var autoFullName = autos[autos.length - 1].auto.marca_modelo_anho;
                 this.setState({ autos })
                 this.setState({ autosBusqueda: autos })
-                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/Vendidas/").on('value', snapChild => {
+                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/Inventario/").on('value', snapChild => {
                     snapChild.forEach(snapChildChild => {
-                        carrito.push({
+                        piezas.push({
                             id: snapChildChild.key,
                             idAuto: snapshot.key,
                             nombreAuto: autoFullName,
                             pieza: snapChildChild.val()
                         });
-                        this.setState({ carrito })
+                        this.setState({ piezas })
+                        this.setState({ piezasBusqueda: piezas })
                     });
                 });
             });
@@ -107,11 +109,12 @@ class Ventas extends Component {
         });
     }
 
+    //Corregir formulario para inventario de piezas
     recibirFormulario = (e) => {
         e.preventDefault();
         var piezaNueva = this.state.piezaNueva;
         if (this.validator.allValid()) {
-            firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Vendidas/").push().set(piezaNueva);
+            firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Inventario/").push().set(piezaNueva);
             swal(
                 'Agregado Exitosamente',
                 'Pieza agregada exitosamente',
@@ -128,18 +131,22 @@ class Ventas extends Component {
         document.getElementById('formPiezas').reset();
     }
 
-    seleccionarAuto = (autoId, autoFullName) => {
+    seleccionarAuto = (idAuto) => {
+        var { autos } = this.state;
+        var auto = autos.find(auto => auto.id === idAuto);
         this.setState({
             currentAuto: {
-                id: autoId,
-                autoFullName: autoFullName
+                id: auto.id,
+                Piezas: auto.auto.Piezas,
+                autoName: auto.auto.marca_modelo_anho
             }
         });
+
     }
 
     realizarVenta = (e) => {
         e.preventDefault();
-        const { carrito } = this.state;
+        const { piezas } = this.state;
         if (this.validatorPassword.allValid()) {
             //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
             swal(
@@ -160,32 +167,44 @@ class Ventas extends Component {
         this.setState({ autosBusqueda: result })
     }
 
+    buscarPieza = (e) => {
+        var { piezas } = this.state;
+        var result = piezas.filter(pieza => pieza.pieza.nombre.toLowerCase().startsWith(e.target.value.toLowerCase()));
+        this.setState({ piezasBusqueda: result })
+    }
+
     eliminarPieza = (idPieza, idAuto) => {
-        const { carrito } = this.state;
-        var index = carrito.findIndex(x => x.id === idPieza);
-        carrito.splice(index, 1);
-        this.setState({ carrito })
-        firebase.database().ref('Autos/' + idAuto + '/Piezas/Vendidas/' + idPieza).remove();
+        // swal("¿Desea eliminar está pieza?", {
+        //     buttons: {
+        //         cancel: {
+        //             text: "Cancelar",
+        //             value: "cancelar"
+        //         }
+        //     }
+        // });
+
     }
 
     render() {
 
         const { autosBusqueda } = this.state;
-        const { carrito } = this.state;
+        const { piezasBusqueda } = this.state;
         const listaAutos = autosBusqueda.map(auto => {
-            return <ListGroup.Item action onClick={() => this.seleccionarAuto(auto.id, auto.auto.marca_modelo_anho)} key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
+            return <ListGroup.Item action onClick={() => this.seleccionarAuto(auto.id)} key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
         });
-        const listaCarrito = carrito.map(pieza => {
-            return <tr key={pieza.id}>
-                <td>{pieza.nombreAuto}</td>
-                <td>{pieza.pieza.nombre}</td>
-                <td>{pieza.pieza.cantidad}</td>
-                <td>{pieza.pieza.precio}</td>
-                <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
-                <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
-            </tr>
+        const listaPiezas = piezasBusqueda.map(pieza => {
+            if (this.state.currentAuto.id === pieza.idAuto) {
+                return <tr key={pieza.id}>
+                    <td>{pieza.nombreAuto}</td>
+                    <td>{pieza.pieza.nombre}</td>
+                    <td>{pieza.pieza.cantidad}</td>
+                    <td>{pieza.pieza.precio}</td>
+                    <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
+                    <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
+                </tr>
+            }
         });
-        const totalPagar = carrito.reduce((total, arr) => {
+        const totalPagar = piezasBusqueda.reduce((total, arr) => {
             return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
         }, 0);
         return (
@@ -203,7 +222,7 @@ class Ventas extends Component {
                     </FadeIn>
                 ) : (
                         <div>
-                            <Row className="mt-4 col-12 ml-1 estilo">
+                            <Row className="mt-4 col-12 ml-1">
                                 <Col xs={12} md={4}>
                                     <InputGroup className="mb-3">
                                         <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>
@@ -214,22 +233,27 @@ class Ventas extends Component {
                                         </ListGroup>
                                     </Card>
                                 </Col>
-                                <Col xs={6} md={8} className="col-8 properties-autos">
-                                    <Table responsive striped bordered hover size="sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Auto</th>
-                                                <th>Pieza</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
-                                                <th>Precio</th>
-                                                <th>Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listaCarrito}
-                                        </tbody>
-                                    </Table>
+                                <Col xs={6} md={8} className="col-8">
+                                    <InputGroup className="mb-3">
+                                        <FormControl placeholder="Buscar Pieza" onKeyUp={this.buscarPieza}></FormControl>
+                                    </InputGroup>
+                                    <Col className="properties-autos">
+                                        <Table responsive striped bordered hover size="sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Auto</th>
+                                                    <th>Pieza</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Precio</th>
+                                                    <th>Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {listaPiezas}
+                                            </tbody>
+                                        </Table>
+                                    </Col>
                                 </Col>
                             </Row>
 
@@ -239,12 +263,12 @@ class Ventas extends Component {
                                         <Form.Group>
                                             <Form.Label name="nombreAuto">
                                                 <strong>
-                                                    {this.state.currentAuto !== undefined &&
-                                                        this.state.currentAuto.autoFullName
+                                                    {this.state.currentAuto !== undefined && this.state.currentAuto !== null &&
+                                                        this.state.currentAuto.autoName
                                                     }
                                                 </strong>
                                             </Form.Label>
-                                            {this.validator.message('nombreAuto', this.state.currentAuto.autoFullName, 'required|alpha_num_space')}
+                                            {this.validator.message('nombreAuto', this.state.currentAuto.autoName, 'required|alpha_num_space')}
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Control type="text" placeholder="Nombre de la pieza" name="nombre" ref={this.nombrePiezaRef} onChange={this.changeState}></Form.Control>
@@ -266,21 +290,6 @@ class Ventas extends Component {
                                                 <Button type="submit" variant="info">Agregar Pieza</Button>
                                             </Form.Group>
                                         </Form.Row>
-                                    </Form>
-                                </Col>
-                                <Col xs={6} md={8} className="col-8">
-                                    <Form onSubmit={this.realizarVenta} className="properties-pagar">
-                                        <Form.Group>
-                                            <Form.Label>Total</Form.Label>
-                                            <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef} onChange={this.passwordHandle}></Form.Control>
-                                            {this.validatorPassword.message('password', this.state.password, 'required')}
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Button type="submit" className="properties-button" variant="info">Pagar</Button>
-                                        </Form.Group>
                                     </Form>
                                 </Col>
                             </Row>
