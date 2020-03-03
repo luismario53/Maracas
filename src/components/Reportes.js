@@ -62,7 +62,7 @@ class Reportes extends Component {
                     </FadeIn>
                 ) : (
                         <div>
-                            <Row className="mt-4 col-12 ml-1">
+                            <Row className="mt-3 col-12 ml-1">
                                 <Fecha />
                                 <Col className="form-inline">
                                     <Col>
@@ -73,7 +73,7 @@ class Reportes extends Component {
                                     </Col>
                                 </Col>
                             </Row>
-                            <Row className="mt-4 col-12 ml-1 properties-tabla-autos">
+                            <Row className="mt-3 col-12 ml-1 properties-tabla-autos">
                                 <Table responsive striped bordered hover size="sm">
                                     <thead>
                                         <tr>

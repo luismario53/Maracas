@@ -70,7 +70,7 @@ class Ventas extends Component {
                 var autoFullName = autos[autos.length - 1].auto.marca_modelo_anho;
                 this.setState({ autos })
                 this.setState({ autosBusqueda: autos })
-                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/Vendidas/").on('value', snapChild => {
+                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/Carrito/").on('value', snapChild => {
                     snapChild.forEach(snapChildChild => {
                         carrito.push({
                             id: snapChildChild.key,
@@ -111,7 +111,7 @@ class Ventas extends Component {
         e.preventDefault();
         var piezaNueva = this.state.piezaNueva;
         if (this.validator.allValid()) {
-            firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Vendidas/").push().set(piezaNueva);
+            firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Carrito/").push().set(piezaNueva);
             swal(
                 'Agregado Exitosamente',
                 'Pieza agregada exitosamente',
@@ -165,7 +165,7 @@ class Ventas extends Component {
         var index = carrito.findIndex(x => x.id === idPieza);
         carrito.splice(index, 1);
         this.setState({ carrito })
-        firebase.database().ref('Autos/' + idAuto + '/Piezas/Vendidas/' + idPieza).remove();
+        firebase.database().ref('Autos/' + idAuto + '/Piezas/Carrito/' + idPieza).remove();
     }
 
     render() {
@@ -203,7 +203,7 @@ class Ventas extends Component {
                     </FadeIn>
                 ) : (
                         <div>
-                            <Row className="mt-3 col-12 ml-1 estilo">
+                            <Row className="mt-3 col-12 ml-1">
                                 <Col xs={12} md={4}>
                                     <InputGroup className="mb-3">
                                         <FormControl placeholder="Buscar Auto" onKeyUp={this.buscarAuto}></FormControl>

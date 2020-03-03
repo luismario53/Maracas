@@ -155,7 +155,7 @@ class Autos extends Component {
                         </div>
                     </FadeIn>
                 ) : (
-                        <Row className="mt-4 col-12 ml-1">
+                        <Row className="mt-3 col-12 ml-1">
                             <Col xs={12} md={4}>
                                 <Form onSubmit={this.recibirFormulario} id="formAutos">
                                     <Form.Group>

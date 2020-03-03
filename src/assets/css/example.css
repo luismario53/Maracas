@@ -23,6 +23,11 @@ input::-webkit-inner-spin-button {
     max-height: 80vh;
 }
 
+.properties-tabla-reportes{
+    overflow-x: hidden;
+    max-height: 70vh;
+}
+
 .properties-button{
     width: 100%;
 }
