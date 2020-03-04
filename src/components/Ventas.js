@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button, Tabs, Tab } from 'react-bootstrap';
 import '../assets/css/example.css'
 import firebase from 'firebase';
 import swal from 'sweetalert'
 import SimpleReactValidator from 'simple-react-validator';
+import TablaCarrito from './TablaCarrito';
+import TablaInventario from './TablaInventario';
 
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
@@ -215,7 +217,7 @@ class Ventas extends Component {
                                     </Card>
                                 </Col>
                                 <Col xs={6} md={8} className="col-8 properties-autos">
-                                    <Table responsive striped bordered hover size="sm">
+                                    {/* <Table responsive striped bordered hover size="sm">
                                         <thead>
                                             <tr>
                                                 <th>Auto</th>
@@ -229,7 +231,15 @@ class Ventas extends Component {
                                         <tbody>
                                             {listaCarrito}
                                         </tbody>
-                                    </Table>
+                                    </Table> */}
+                                    <Tabs defaultActiveKey="carrito">
+                                        <Tab eventKey="inventario" title="Inventario">
+                                            <TablaInventario />
+                                        </Tab>
+                                        <Tab eventKey="carrito" title="Carrito">
+                                            <TablaCarrito carrito={this.state.carrito} eliminar={this.eliminarPieza} />
+                                        </Tab>
+                                    </Tabs>
                                 </Col>
                             </Row>
 
