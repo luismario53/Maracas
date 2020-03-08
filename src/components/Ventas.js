@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button, Tabs, Tab } from 'react-bootstrap';
+import { Form, Card, Col, Row, ListGroup, InputGroup, FormControl, Button, Tabs, Tab } from 'react-bootstrap';
 import '../assets/css/example.css'
 import firebase from 'firebase';
 import swal from 'sweetalert'
@@ -9,9 +9,9 @@ import TablaInventario from './TablaInventario';
 
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
-import ReactLoading from 'react-loading';
+//import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
+//import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
@@ -21,23 +21,23 @@ const defaultOptions = {
         preserveAspectRatio: "xMidYMid slice"
     }
 };
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
+// const defaultOptions2 = {
+//     loop: false,
+//     autoplay: true,
+//     animationData: doneData.default,
+//     rendererSettings: {
+//         preserveAspectRatio: "xMidYMid slice"
+//     }
+// };
 
 class Ventas extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      autos: []
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       autos: []
       
-    };
-  }
+//     };
+//   }
 
     nombrePiezaRef = React.createRef();
     cantidadPiezaRef = React.createRef();
@@ -144,12 +144,12 @@ class Ventas extends Component {
                 autoFullName: autoFullName
             }
         });
-      });
+      
   }
 
     realizarVenta = (e) => {
         e.preventDefault();
-        const { carrito } = this.state;
+       // const { carrito } = this.state;
         if (this.validatorPassword.allValid()) {
             //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
             swal(
@@ -185,16 +185,16 @@ class Ventas extends Component {
         const listaAutos = autosBusqueda.map(auto => {
             return <ListGroup.Item action onClick={() => this.seleccionarAuto(auto.id, auto.auto.marca_modelo_anho)} key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
         });
-        const listaCarrito = carrito.map(pieza => {
-            return <tr key={pieza.id}>
-                <td>{pieza.nombreAuto}</td>
-                <td>{pieza.pieza.nombre}</td>
-                <td>{pieza.pieza.cantidad}</td>
-                <td>{pieza.pieza.precio}</td>
-                <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
-                <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
-            </tr>
-        });
+        // const listaCarrito = carrito.map(pieza => {
+        //     return <tr key={pieza.id}>
+        //         <td>{pieza.nombreAuto}</td>
+        //         <td>{pieza.pieza.nombre}</td>
+        //         <td>{pieza.pieza.cantidad}</td>
+        //         <td>{pieza.pieza.precio}</td>
+        //         <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
+        //         <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
+        //     </tr>
+        // });
         const totalPagar = carrito.reduce((total, arr) => {
             return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
         }, 0);

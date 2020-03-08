@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { Row, Col, Accordion, Card, Table } from "react-bootstrap";
+import { Row, Col, Accordion, Card } from "react-bootstrap";
 
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
-import ReactLoading from 'react-loading';
+//import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
+//import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
@@ -16,14 +16,14 @@ const defaultOptions = {
         preserveAspectRatio: "xMidYMid slice"
     }
 };
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
+// const defaultOptions2 = {
+//     loop: false,
+//     autoplay: true,
+//     animationData: doneData.default,
+//     rendererSettings: {
+//         preserveAspectRatio: "xMidYMid slice"
+//     }
+// };
 
 class Inicio extends Component {
 

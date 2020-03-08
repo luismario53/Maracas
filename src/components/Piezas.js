@@ -7,9 +7,9 @@ import SimpleReactValidator from 'simple-react-validator';
 
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
-import ReactLoading from 'react-loading';
+//import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
+//import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
@@ -19,14 +19,14 @@ const defaultOptions = {
         preserveAspectRatio: "xMidYMid slice"
     }
 };
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
+// const defaultOptions2 = {
+//     loop: false,
+//     autoplay: true,
+//     animationData: doneData.default,
+//     rendererSettings: {
+//         preserveAspectRatio: "xMidYMid slice"
+//     }
+// };
 
 class Ventas extends Component {
 
@@ -146,7 +146,7 @@ class Ventas extends Component {
 
     realizarVenta = (e) => {
         e.preventDefault();
-        const { piezas } = this.state;
+        //const { piezas } = this.state;
         if (this.validatorPassword.allValid()) {
             //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
             swal(
@@ -194,7 +194,7 @@ class Ventas extends Component {
         });
         const listaPiezas = piezasBusqueda.map(pieza => {
             if (this.state.currentAuto.id === pieza.idAuto) {
-                return <tr key={pieza.id}>
+                return( <tr key={pieza.id}>
                     <td>{pieza.nombreAuto}</td>
                     <td>{pieza.pieza.nombre}</td>
                     <td>{pieza.pieza.cantidad}</td>
@@ -202,11 +202,12 @@ class Ventas extends Component {
                     <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
                     <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
                 </tr>
+                )
             }
         });
-        const totalPagar = piezasBusqueda.reduce((total, arr) => {
-            return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
-        }, 0);
+        // const totalPagar = piezasBusqueda.reduce((total, arr) => {
+        //     return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
+        // }, 0);
         return (
 
             <div>
