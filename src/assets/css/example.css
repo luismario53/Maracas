@@ -1,5 +1,7 @@
-.estilo{
-    height: 50vh;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .properties-pagar{
@@ -13,11 +15,17 @@
 .properties-autos{
     overflow-x: hidden;
     max-height: 50vh;
+    cursor: pointer;
 }
 
 .properties-tabla-autos{
     overflow-x: hidden;
     max-height: 80vh;
+}
+
+.properties-tabla-reportes{
+    overflow-x: hidden;
+    max-height: 70vh;
 }
 
 .properties-button{

@@ -20,7 +20,7 @@ function createWindow() {
     mainWindow.setMenu(null);
     mainWindow.maximize();
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3000');
+    mainWindow.loadURL('localhost:3000');
 
     // Open the DevTools.
     //mainWindow.webContents.openDevTools();
