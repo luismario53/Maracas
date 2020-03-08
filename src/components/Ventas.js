@@ -17,16 +17,9 @@ class Ventas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      autos: [],
-      search: ""
+      autos: []
+      
     };
-  }
-
-  updateSearch(event) {
-    this.setState({
-      search: event.target.value
-    });
-    console.log(this.state.search);
   }
 
   componentDidMount() {
@@ -45,8 +38,19 @@ class Ventas extends Component {
       });
   }
 
+  autosData() {
+    firebase
+      .database()
+      .ref("Autos/")
+      .on("child_added", function(snapshot, prevChildKey) {
+        var datosAutos = snapshot.val();
+        this.setState({ dataAutos: datosAutos });
+      });
+  }
+
   render() {
     const { autos } = this.state;
+    
     const listaAutos = autos.map(auto => {
       return (
         <ListGroup.Item key={auto.id}>
@@ -88,113 +92,15 @@ class Ventas extends Component {
               </thead>
               <tbody>
                 <tr>
-                  <td>Ford Focus 2008</td>
+                  <td>Carrote</td>
                   <td>Bugia radiador</td>
                   <td>3</td>
                   <td>500</td>
                   <td>
-                    <Button variant="outline-danger">Eliminar</Button>
+                    <Button variant="outline-danger btn-sm">Eliminar</Button>
                   </td>
                 </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ford Focus 2008</td>
-                  <td>Bugia radiador</td>
-                  <td>3</td>
-                  <td>500</td>
-                  <td>
-                    <Button variant="outline-danger">Eliminar</Button>
-                  </td>
-                </tr>
+                
               </tbody>
             </Table>
           </Col>

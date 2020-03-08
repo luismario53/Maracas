@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Router from './components/Router';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 
 function App() {
