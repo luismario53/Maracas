@@ -9,20 +9,11 @@ import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
 import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
     autoplay: true,
     animationData: carData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
     rendererSettings: {
         preserveAspectRatio: "xMidYMid slice"
     }
@@ -143,23 +134,6 @@ class Ventas extends Component {
         });
 
     }
-
-    // realizarVenta = (e) => {
-    //     e.preventDefault();
-    //     const { piezas } = this.state;
-    //     if (this.validatorPassword.allValid()) {
-    //         //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
-    //         swal(
-    //             'Venta Exitosa',
-    //             'Venta realizada exitosamente',
-    //             'success'
-    //         );
-    //         //this.limpiarCampos();
-    //     } else {
-    //         this.forceUpdate();
-    //         this.validatorPassword.showMessages();
-    //     }
-    // }
 
     buscarAuto = (e) => {
         var { autos } = this.state;

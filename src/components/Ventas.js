@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Card, Col, Row, Table, ListGroup, InputGroup, FormControl, Button, Tabs, Tab } from 'react-bootstrap';
+import { Form, Card, Col, Row, ListGroup, InputGroup, FormControl, Button, Tabs, Tab } from 'react-bootstrap';
 import '../assets/css/example.css'
 import firebase from 'firebase';
 import swal from 'sweetalert'
@@ -11,20 +11,11 @@ import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
 import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
     autoplay: true,
     animationData: carData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
     rendererSettings: {
         preserveAspectRatio: "xMidYMid slice"
     }

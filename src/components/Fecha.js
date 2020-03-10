@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import es from 'date-fns/locale/es';
-import { Button, Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 class Fecha extends Component {
 

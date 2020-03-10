@@ -9,22 +9,12 @@ import ModalAuto from './ModalEditarAuto';
 //
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
-import ReactLoading from 'react-loading';
 import * as carData from "./blue-car.json";
-import * as doneData from "./doneloading.json";
 
 const defaultOptions = {
     loop: true,
     autoplay: true,
     animationData: carData.default,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
-};
-const defaultOptions2 = {
-    loop: false,
-    autoplay: true,
-    animationData: doneData.default,
     rendererSettings: {
         preserveAspectRatio: "xMidYMid slice"
     }
@@ -57,34 +47,6 @@ class Autos extends Component {
             done: undefined
         };
 
-    }
-
-    ExampleModal = () => {
-
-        return (
-            <>
-                <Button variant="outline-primary" onClick={() => setShow(true)}>
-                    Editar
-            </Button>
-
-                <Modal
-                    className="properties-modal"
-                    show={show}
-                    onHide={() => setShow(false)}
-                    dialogClassName="modal-50w"
-                    aria-labelledby="example-custom-modal-styling-title"
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title id="example-custom-modal-styling-title">
-                            Custom Modal Styling
-                </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        
-                    </Modal.Body>
-                </Modal>
-            </>
-        );
     }
 
     fechaCompra = (fechaCompra) => {
