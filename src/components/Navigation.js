@@ -9,11 +9,11 @@ class Navigation extends Component {
             <Navbar bg="dark" variant="dark">
                 <Navbar.Brand>El Árabe</Navbar.Brand>
                 <Nav className="mr-auto">
-                    <Nav.Link> <NavLink className="nav-link" to="/" >Inicio</NavLink> </Nav.Link>
-                    <Nav.Link> <NavLink className="nav-link" to="/autos">Autos</NavLink></Nav.Link>
-                    <Nav.Link> <NavLink className="nav-link" to="/piezas">Piezas</NavLink></Nav.Link>
-                    <Nav.Link> <NavLink className="nav-link" to="/ventas">Ventas</NavLink></Nav.Link>
-                    <Nav.Link> <NavLink className="nav-link" to="/reportes">Reportes</NavLink></Nav.Link>
+                     <NavLink className="nav-link" to="/" >Inicio</NavLink>
+                     <NavLink className="nav-link" to="/autos">Autos</NavLink>
+                     <NavLink className="nav-link" to="/piezas">Piezas</NavLink>
+                     <NavLink className="nav-link" to="/ventas">Ventas</NavLink>
+                     <NavLink className="nav-link" to="/reportes">Reportes</NavLink>
                 </Nav>
             </Navbar>
 
