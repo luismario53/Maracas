@@ -12,6 +12,10 @@ input::-webkit-inner-spin-button {
     resize: none;
 }
 
+.tabla-mouse{
+    cursor: pointer;
+}
+
 .properties-autos{
     overflow-x: hidden;
     max-height: 50vh;

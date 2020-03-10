@@ -33,13 +33,8 @@ class TablaInventario extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            carrito: this.props.carrito,
-            done: undefined
-        };
-    }
 
-    eliminarPieza = () => {
-        
+        };
     }
 
     render() {
@@ -71,7 +66,7 @@ class TablaInventario extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {listaCarrito} */}
+                    {this.props.piezas}
                 </tbody>
             </Table>
         );

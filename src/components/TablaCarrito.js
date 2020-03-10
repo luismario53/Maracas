@@ -33,8 +33,7 @@ class TablaCarrito extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            carrito: this.props.carrito,
-            done: undefined
+            
         };
     }
 
@@ -44,17 +43,17 @@ class TablaCarrito extends Component {
 
     render() {
 
-        const { carrito } = this.state;
-        const listaCarrito = carrito.map(pieza => {
-            return <tr key={pieza.id}>
-                <td>{pieza.nombreAuto}</td>
-                <td>{pieza.pieza.nombre}</td>
-                <td>{pieza.pieza.cantidad}</td>
-                <td>{pieza.pieza.precio}</td>
-                <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
-                <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
-            </tr>
-        });
+        // const { carrito } = this.state;
+        // const listaCarrito = carrito.map(pieza => {
+        //     return <tr key={pieza.id}>
+        //         <td>{pieza.nombreAuto}</td>
+        //         <td>{pieza.pieza.nombre}</td>
+        //         <td>{pieza.pieza.cantidad}</td>
+        //         <td>{pieza.pieza.precio}</td>
+        //         <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
+        //         <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
+        //     </tr>
+        // });
 
         return (
             <Table responsive striped bordered hover size="sm">
@@ -69,7 +68,7 @@ class TablaCarrito extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {listaCarrito}
+                    {this.props.carrito}
                 </tbody>
             </Table>
         );

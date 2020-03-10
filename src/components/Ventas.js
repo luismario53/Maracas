@@ -56,7 +56,9 @@ class Ventas extends Component {
             carrito: [],
             currentAuto: {},
             password: '',
-            done: undefined
+            done: undefined,
+            piezas: [],
+            piezasBusqueda: []
         };
     }
 
@@ -64,6 +66,7 @@ class Ventas extends Component {
         firebase.database().ref('Autos/').on('value', snap => {
             var autos = [];
             var carrito = [];
+            var piezas = [];
             snap.forEach(snapshot => {
                 autos.push({
                     id: snapshot.key,
@@ -81,6 +84,18 @@ class Ventas extends Component {
                             pieza: snapChildChild.val()
                         });
                         this.setState({ carrito })
+                    });
+                });
+                firebase.database().ref('/Autos/' + snapshot.key + "/Piezas/Inventario/").on('value', snapChild => {
+                    snapChild.forEach(snapChildChild => {
+                        piezas.push({
+                            id: snapChildChild.key,
+                            idAuto: snapshot.key,
+                            nombreAuto: autoFullName,
+                            pieza: snapChildChild.val()
+                        });
+                        this.setState({ piezas })
+                        this.setState({ piezasBusqueda: piezas })
                     });
                 });
             });
@@ -107,6 +122,49 @@ class Ventas extends Component {
                 precio: this.precioPiezaRef.current.value
             }
         });
+    }
+
+    //Para agregar al carrito desde el inventario
+    agregarCarrito = (id, nombre, cantidad, precio) => {
+        var { carrito } = this.state;
+        //var { piezasBusqueda } = this.state;
+        var piezaCarrito = carrito.find(pieza => pieza.id === id);
+        //var piezaInventario = piezasBusqueda.find(pieza => pieza.id === id);
+        if (cantidad > 0) {
+            if (piezaCarrito !== undefined) {
+                piezaCarrito.pieza.cantidad++;
+                firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Carrito/" + id).set({
+                    nombre: nombre,
+                    cantidad: piezaCarrito.pieza.cantidad,
+                    precio: precio
+                });
+                cantidad--;
+                firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Inventario/" + id).set({
+                    nombre: nombre,
+                    cantidad: cantidad,
+                    precio: precio
+                });
+            } else {
+                firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Carrito/" + id).set({
+                    nombre: nombre,
+                    cantidad: 1,
+                    precio: precio
+                });
+                cantidad--;
+                firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/Inventario/" + id).set({
+                    nombre: nombre,
+                    cantidad: cantidad,
+                    precio: precio
+                });
+            }
+        } else {
+            swal(
+                'Error al agregar pieza',
+                'Ya no hay piezas',
+                'error'
+            )
+        }
+
     }
 
     recibirFormulario = (e) => {
@@ -139,17 +197,53 @@ class Ventas extends Component {
         });
     }
 
+    camposNumericos = (e) => {
+        if (e.which !== 8 && e.which !== 0 && e.which < 48 || e.which > 57) {
+            e.preventDefault();
+        }
+    }
+
     realizarVenta = (e) => {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
         e.preventDefault();
-        const { carrito } = this.state;
         if (this.validatorPassword.allValid()) {
-            //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
-            swal(
-                'Venta Exitosa',
-                'Venta realizada exitosamente',
-                'success'
-            );
-            //this.limpiarCampos();
+            const { carrito } = this.state;
+            var { password } = this.state;
+            var aux = [];
+            var ultimaVenta;
+            firebase.database().ref('/Passwords/').on('value', snap => {
+                snap.forEach(snapchild => {
+                    //Nambre GG
+                    var usuario = snapchild.val();
+                    aux.push({
+                        id: snapchild.key,
+                        nombre: usuario.nombre,
+                        password: usuario.pass
+                    });
+                });
+                var result = aux.find(x => password === x.password);
+                if (result !== undefined) {
+                    firebase.database().ref('/Ventas/').limitToLast(1).once('value', snap => {
+                        snap.forEach(snapchild => {
+                            ultimaVenta = snapchild.key;
+                        });
+                        ultimaVenta++;
+                        var totalPagar = carrito.reduce((total, arr) => {
+                            return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
+                        }, 0);
+
+                        today = dd + '/' + mm + '/' + yyyy;
+                        firebase.database().ref('/Ventas/' + ultimaVenta).set({
+                            empleado: result.nombre,
+                            fechaVenta: today,
+                            total: totalPagar
+                        });
+                    });
+                }
+            });
         } else {
             this.forceUpdate();
             this.validatorPassword.showMessages();
@@ -164,16 +258,49 @@ class Ventas extends Component {
 
     eliminarPieza = (idPieza, idAuto) => {
         const { carrito } = this.state;
-        var index = carrito.findIndex(x => x.id === idPieza);
-        carrito.splice(index, 1);
-        this.setState({ carrito })
-        firebase.database().ref('Autos/' + idAuto + '/Piezas/Carrito/' + idPieza).remove();
+        var { piezasBusqueda } = this.state;
+        var pieza = carrito.find(pieza => pieza.id === idPieza);
+        var index = carrito.findIndex(pieza => pieza.id === idPieza);
+        var piezaInventario = piezasBusqueda.find(pieza => pieza.id === idPieza);
+        var indexPieza = piezasBusqueda.findIndex(pieza => pieza.id === idPieza);
+
+        if (pieza.pieza.cantidad > 1) {
+            pieza.pieza.cantidad--;
+            firebase.database().ref('Autos/' + idAuto + "/Piezas/Carrito/" + idPieza).set({
+                nombre: pieza.pieza.nombre,
+                cantidad: pieza.pieza.cantidad,
+                precio: pieza.pieza.precio
+            });
+            if (piezaInventario !== undefined) {
+                piezaInventario.pieza.cantidad++;
+                piezasBusqueda[indexPieza] = piezaInventario;
+                firebase.database().ref('Autos/' + idAuto + "/Piezas/Inventario/" + idPieza).set({
+                    nombre: pieza.pieza.nombre,
+                    cantidad: piezaInventario.pieza.cantidad,
+                    precio: pieza.pieza.precio
+                });
+            }
+        } else {
+            //Corregir cuando la pieza no pertenece al inventario, cuando solo esta en el carrito
+            firebase.database().ref('Autos/' + idAuto + '/Piezas/Carrito/' + idPieza).remove();
+            carrito.splice(index, 1);
+            if (piezaInventario !== undefined) {
+                piezaInventario.pieza.cantidad++;
+                piezasBusqueda[indexPieza] = piezaInventario;
+                firebase.database().ref('Autos/' + idAuto + "/Piezas/Inventario/" + idPieza).set({
+                    nombre: pieza.pieza.nombre,
+                    cantidad: piezaInventario.pieza.cantidad,
+                    precio: pieza.pieza.precio
+                });
+            }
+        }
     }
 
     render() {
 
         const { autosBusqueda } = this.state;
         const { carrito } = this.state;
+        const { piezasBusqueda } = this.state;
         const listaAutos = autosBusqueda.map(auto => {
             return <ListGroup.Item action onClick={() => this.seleccionarAuto(auto.id, auto.auto.marca_modelo_anho)} key={auto.id}>{auto.auto.marca_modelo_anho}</ListGroup.Item>
         });
@@ -186,6 +313,18 @@ class Ventas extends Component {
                 <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
                 <td><Button variant="outline-danger" onClick={() => this.eliminarPieza(pieza.id, pieza.idAuto)}>Eliminar</Button></td>
             </tr>
+        });
+        const listaPiezas = piezasBusqueda.map(pieza => {
+            if (this.state.currentAuto.id === pieza.idAuto) {
+                return <tr key={pieza.id}>
+                    <td>{pieza.nombreAuto}</td>
+                    <td>{pieza.pieza.nombre}</td>
+                    <td>{pieza.pieza.cantidad}</td>
+                    <td>{pieza.pieza.precio}</td>
+                    <td>{pieza.pieza.cantidad * pieza.pieza.precio}</td>
+                    <td><Button variant="outline-primary" onClick={() => this.agregarCarrito(pieza.id, pieza.pieza.nombre, pieza.pieza.cantidad, pieza.pieza.precio)}>Agregar</Button></td>
+                </tr>
+            }
         });
         const totalPagar = carrito.reduce((total, arr) => {
             return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
@@ -217,27 +356,12 @@ class Ventas extends Component {
                                     </Card>
                                 </Col>
                                 <Col xs={6} md={8} className="col-8 properties-autos">
-                                    {/* <Table responsive striped bordered hover size="sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Auto</th>
-                                                <th>Pieza</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
-                                                <th>Precio</th>
-                                                <th>Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listaCarrito}
-                                        </tbody>
-                                    </Table> */}
                                     <Tabs defaultActiveKey="carrito">
                                         <Tab eventKey="inventario" title="Inventario">
-                                            <TablaInventario />
+                                            <TablaInventario piezas={listaPiezas} />
                                         </Tab>
                                         <Tab eventKey="carrito" title="Carrito">
-                                            <TablaCarrito carrito={this.state.carrito} eliminar={this.eliminarPieza} />
+                                            <TablaCarrito carrito={listaCarrito} eliminar={this.eliminarPieza} />
                                         </Tab>
                                     </Tabs>
                                 </Col>
@@ -261,11 +385,11 @@ class Ventas extends Component {
                                             {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required|alpha_num_space')}
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState}></Form.Control>
+                                            <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                             {this.validator.message('cantidad', this.state.piezaNueva.cantidad, 'required|integer')}
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState}></Form.Control>
+                                            <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                             {this.validator.message('precio', this.state.piezaNueva.precio, 'required|integer')}
                                         </Form.Group>
                                         <Form.Row>
@@ -282,11 +406,11 @@ class Ventas extends Component {
                                     <Form onSubmit={this.realizarVenta} className="properties-pagar">
                                         <Form.Group>
                                             <Form.Label>Total</Form.Label>
-                                            <Form.Control as="label" type="number" placeholder="Total" name="total" ref={this.totalRef}>{totalPagar}</Form.Control>
+                                            <Form.Control as="label" type="number" placeholder="Total" name="total">{totalPagar}</Form.Control>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Control type="password" placeholder="Contraseña" name="password" ref={this.passwordRef} onChange={this.passwordHandle}></Form.Control>
-                                            {this.validatorPassword.message('password', this.state.password, 'required')}
+                                            {this.validatorPassword.message('password', this.state.password, 'required|alpha_num')}
                                         </Form.Group>
                                         <Form.Group>
                                             <Button type="submit" className="properties-button" variant="info">Pagar</Button>

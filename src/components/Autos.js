@@ -5,6 +5,7 @@ import '../assets/css/example.css'
 import SimpleReactValidator from 'simple-react-validator';
 import Fecha from './Fecha';
 import swal from 'sweetalert';
+import ModalAuto from './ModalEditarAuto';
 //
 import FadeIn from 'react-fade-in';
 import Lottie from 'react-lottie';
@@ -38,7 +39,8 @@ class Autos extends Component {
     lugarCompraRef = React.createRef();
     precioCompraRef = React.createRef();
     gasUsadaRef = React.createRef();
-    precioExpModRef = React.createRef();
+    precioExpRef = React.createRef();
+    precioModRef = React.createRef();
     fechaCompraRef = React.createRef();
 
     constructor(props) {
@@ -54,6 +56,35 @@ class Autos extends Component {
             fecha: '',
             done: undefined
         };
+
+    }
+
+    ExampleModal = () => {
+
+        return (
+            <>
+                <Button variant="outline-primary" onClick={() => setShow(true)}>
+                    Editar
+            </Button>
+
+                <Modal
+                    className="properties-modal"
+                    show={show}
+                    onHide={() => setShow(false)}
+                    dialogClassName="modal-50w"
+                    aria-labelledby="example-custom-modal-styling-title"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                            Custom Modal Styling
+                </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        
+                    </Modal.Body>
+                </Modal>
+            </>
+        );
     }
 
     fechaCompra = (fechaCompra) => {
@@ -67,6 +98,14 @@ class Autos extends Component {
         })
     }
 
+    seleccionarAuto = (auto) => {
+
+    }
+
+    modificarAuto = (e) => {
+        e.preventDefault();
+    }
+
     changeState = () => {
         this.setState({
             autoNuevo: {
@@ -78,10 +117,17 @@ class Autos extends Component {
                 lugarCompra: this.lugarCompraRef.current.value,
                 precioCompra: this.precioCompraRef.current.value,
                 gasUsada: this.gasUsadaRef.current.value,
-                precioExpMod: this.precioExpModRef.current.value,
+                precioExp: this.precioExpRef.current.value,
+                precioMod: this.precioModRef.current.value,
                 fechaCompra: this.state.fecha,
             }
         });
+    }
+
+    camposNumericos = (e) => {
+        if (e.which !== 8 && e.which !== 0 && e.which < 48 || e.which > 57) {
+            e.preventDefault();
+        }
     }
 
     recibirFormulario = (e) => {
@@ -137,7 +183,9 @@ class Autos extends Component {
                     <td>{auto.auto.fechaCompra}</td>
                     <td>{auto.auto.precioCompra}</td>
                     <td>{auto.auto.gasUsada}</td>
-                    <td>{auto.auto.precioExpMod}</td>
+                    <td>{auto.auto.precioExp}</td>
+                    <td>{auto.auto.precioMod}</td>
+                    <td><this.ExampleModal /></td>
                 </tr>
             );
         });
@@ -167,11 +215,11 @@ class Autos extends Component {
                                         {this.validator.message('modelo', this.state.autoNuevo.modelo, 'required|alpha_num_space')}
                                     </Form.Group>
                                     <Form.Group>
-                                        <Form.Control type="number" placeholder="Año" name="anho" ref={this.anhoRef} onChange={this.changeState}></Form.Control>
+                                        <Form.Control type="number" placeholder="Año" name="anho" ref={this.anhoRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                         {this.validator.message('anho', this.state.autoNuevo.anho, 'required|integer')}
                                     </Form.Group>
                                     <Form.Group>
-                                        <Form.Control type="number" placeholder="Cilindros" name="cilindros" ref={this.cilindrosRef} onChange={this.changeState}></Form.Control>
+                                        <Form.Control type="number" placeholder="Cilindros" name="cilindros" ref={this.cilindrosRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                         {this.validator.message('cilindros', this.state.autoNuevo.cilindros, 'required|integer')}
                                     </Form.Group>
                                     <Form.Group>
@@ -180,12 +228,12 @@ class Autos extends Component {
                                     </Form.Group>
                                     <Form.Row>
                                         <Form.Group as={Col}>
-                                            <Form.Control type="number" placeholder="Precio" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState}></Form.Control>
-                                            {this.validator.message('marca', this.state.autoNuevo.precioCompra, 'required|alpha_num_space')}
+                                            <Form.Control type="number" placeholder="Precio" name="precioCompra" ref={this.precioCompraRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
+                                            {this.validator.message('precioCompra', this.state.autoNuevo.precioCompra, 'required|integer')}
                                         </Form.Group>
                                         <Form.Group as={Col}>
-                                            <Form.Control type="number" placeholder="Gasolina" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState}></Form.Control>
-                                            {this.validator.message('marca', this.state.autoNuevo.gasUsada, 'required|alpha_num_space')}
+                                            <Form.Control type="number" placeholder="Gasolina" name="gasUsada" ref={this.gasUsadaRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
+                                            {this.validator.message('gasUsada', this.state.autoNuevo.gasUsada, 'required|integer')}
                                         </Form.Group>
                                         <Form.Group as={Col}>
                                             <Fecha
@@ -193,10 +241,16 @@ class Autos extends Component {
                                             />
                                         </Form.Group>
                                     </Form.Row>
-                                    <Form.Group>
-                                        <Form.Control type="number" placeholder="Precio exportada y modulada" name="precioExpMod" ref={this.precioExpModRef} onChange={this.changeState}></Form.Control>
-                                        {this.validator.message('marca', this.state.autoNuevo.precioExpMod, 'required|alpha_num_space')}
-                                    </Form.Group>
+                                    <Form.Row>
+                                        <Form.Group as={Col}>
+                                            <Form.Control type="number" placeholder="Precio Exportada" name="precioExp" ref={this.precioExpRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
+                                            {this.validator.message('precioExp', this.state.autoNuevo.precioExp, 'required|integer')}
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Control type="number" placeholder="Precio Modulada" name="precioMod" ref={this.precioModRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
+                                            {this.validator.message('precioMod', this.state.autoNuevo.precioMod, 'required|integer')}
+                                        </Form.Group>
+                                    </Form.Row>
                                     <Form.Row>
                                         <Form.Group as={Col} className="mt-2">
                                             <Button variant="secondary" onClick={this.limpiarCampos}>Limpiar</Button>
@@ -208,7 +262,7 @@ class Autos extends Component {
                                 </Form>
                             </Col>
                             <Col xs={6} md={8} className="col-8 properties-tabla-autos">
-                                <Table responsive striped bordered hover size="sm">
+                                <Table responsive striped bordered hover size="sm" className="tabla-mouse">
                                     <thead>
                                         <tr>
                                             <th>Marca</th>
@@ -219,7 +273,9 @@ class Autos extends Component {
                                             <th>Fecha Compra</th>
                                             <th>Precio</th>
                                             <th>Gasolina Usada</th>
-                                            <th>Precio Exp Mod</th>
+                                            <th>Precio Exportada</th>
+                                            <th>Precio Modulada</th>
+                                            <th>Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodyId">

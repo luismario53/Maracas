@@ -93,12 +93,6 @@ class Ventas extends Component {
         });
     }
 
-    passwordHandle = () => {
-        this.setState({
-            password: this.passwordRef.current.value
-        });
-    }
-
     changeState = () => {
         this.setState({
             piezaNueva: {
@@ -131,6 +125,12 @@ class Ventas extends Component {
         document.getElementById('formPiezas').reset();
     }
 
+    camposNumericos = (e) => {
+        if (e.which !== 8 && e.which !== 0 && e.which < 48 || e.which > 57) {
+            e.preventDefault();
+        }
+    }
+
     seleccionarAuto = (idAuto) => {
         var { autos } = this.state;
         var auto = autos.find(auto => auto.id === idAuto);
@@ -144,22 +144,22 @@ class Ventas extends Component {
 
     }
 
-    realizarVenta = (e) => {
-        e.preventDefault();
-        const { piezas } = this.state;
-        if (this.validatorPassword.allValid()) {
-            //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
-            swal(
-                'Venta Exitosa',
-                'Venta realizada exitosamente',
-                'success'
-            );
-            //this.limpiarCampos();
-        } else {
-            this.forceUpdate();
-            this.validatorPassword.showMessages();
-        }
-    }
+    // realizarVenta = (e) => {
+    //     e.preventDefault();
+    //     const { piezas } = this.state;
+    //     if (this.validatorPassword.allValid()) {
+    //         //firebase.database().ref('Autos/' + this.state.currentAuto.id + "/Piezas/").push().set(piezaNueva);
+    //         swal(
+    //             'Venta Exitosa',
+    //             'Venta realizada exitosamente',
+    //             'success'
+    //         );
+    //         //this.limpiarCampos();
+    //     } else {
+    //         this.forceUpdate();
+    //         this.validatorPassword.showMessages();
+    //     }
+    // }
 
     buscarAuto = (e) => {
         var { autos } = this.state;
@@ -204,9 +204,7 @@ class Ventas extends Component {
                 </tr>
             }
         });
-        const totalPagar = piezasBusqueda.reduce((total, arr) => {
-            return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
-        }, 0);
+
         return (
 
             <div>
@@ -245,14 +243,14 @@ class Ventas extends Component {
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Control type="text" placeholder="Nombre de la pieza" name="nombre" ref={this.nombrePiezaRef} onChange={this.changeState}></Form.Control>
-                                            {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required|alpha_num_space')}
+                                            {this.validator.message('nombre', this.state.piezaNueva.nombre, 'required')}
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState}></Form.Control>
+                                            <Form.Control type="number" placeholder="Cantidad" name="cantidad" ref={this.cantidadPiezaRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                             {this.validator.message('cantidad', this.state.piezaNueva.cantidad, 'required|integer')}
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState}></Form.Control>
+                                            <Form.Control type="number" placeholder="Precio" name="precio" ref={this.precioPiezaRef} onChange={this.changeState} onKeyPress={this.camposNumericos}></Form.Control>
                                             {this.validator.message('precio', this.state.piezaNueva.precio, 'required|integer')}
                                         </Form.Group>
                                         <Form.Row>
