@@ -225,7 +225,7 @@ class Ventas extends Component {
                         var totalPagar = carrito.reduce((total, arr) => {
                             return parseInt(total) + (parseInt(arr.pieza.precio) * parseInt(arr.pieza.cantidad));
                         }, 0);
-
+                        console.log(carrito);
                         today = dd + '/' + mm + '/' + yyyy;
                         firebase.database().ref('/Ventas/' + ultimaVenta).set({
                             empleado: result.nombre,

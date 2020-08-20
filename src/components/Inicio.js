@@ -106,8 +106,8 @@ class Inicio extends Component {
                         <Row>
                             <Col sm={3}><strong>Auto</strong></Col>
                             <Col sm={3}><strong>Pieza</strong></Col>
-                            <Col sm={2}><strong>Cantidad</strong></Col>
                             <Col sm={2}><strong>Precio Unitario</strong></Col>
+                            <Col sm={2}><strong>Cantidad</strong></Col>
                             <Col sm={2}><strong>Precio</strong></Col>
                         </Row>
                         {

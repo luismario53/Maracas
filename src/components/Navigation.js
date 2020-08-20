@@ -16,7 +16,6 @@ class Navigation extends Component {
                      <NavLink className="nav-link" to="/reportes">Reportes</NavLink>
                 </Nav>
             </Navbar>
-
         );
     }
 }

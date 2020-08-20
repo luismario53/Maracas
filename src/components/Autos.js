@@ -127,8 +127,8 @@ class Autos extends Component {
                 this.setState({ loading: true });
                 setTimeout(() => {
                     this.setState({ done: true });
-                }, 250);
-            }, 250);
+                }, 300);
+            }, 300);
         });
     }
 
@@ -147,7 +147,6 @@ class Autos extends Component {
                     <td>{auto.auto.gasUsada}</td>
                     <td>{auto.auto.precioExp}</td>
                     <td>{auto.auto.precioMod}</td>
-                    <td><this.ExampleModal /></td>
                 </tr>
             );
         });
